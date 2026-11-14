@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: smartdesk
+      POSTGRES_USER: smartdesk
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U smartdesk -d smartdesk"]
+      interval: 5s
+      retries: 20
+  qdrant:
+    image: qdrant/qdrant:v1.20.0
+    volumes: [qdrant_data_v120:/qdrant/storage]
+  migrate:
+    build: ./backend
+    image: smartdesk-backend:local
+    env_file: .env
+    command: [smartdesk, migrate]
+    depends_on:
+      postgres: {condition: service_healthy}
+  backend:
+    build: ./backend
+    image: smartdesk-backend:local
+    env_file: .env
+    volumes: ["./knowledge_base:/knowledge_base:ro", "model_cache:/model-cache"]
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      qdrant: {condition: service_started}
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready')"]
+      interval: 15s
+      retries: 5
+  frontend:
+    build: ./frontend
+    image: smartdesk-frontend:local
+    environment:
+      BACKEND_ORIGIN: http://backend:8000
+      API_BASE: ""
+      OIDC_AUTHORITY: ${FRONTEND_OIDC_AUTHORITY:-}
+      OIDC_CLIENT_ID: ${FRONTEND_OIDC_CLIENT_ID:-}
+    ports: ["127.0.0.1:8080:8080"]
+    depends_on:
+      backend: {condition: service_healthy}
+volumes:
+  postgres_data:
+  qdrant_data_v120:
+  model_cache:

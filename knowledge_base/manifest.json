@@ -1,0 +1,77 @@
+{
+  "hr_source": {
+    "dataset": "strova-ai/hr-policies-qa-dataset",
+    "revision": "83682448cb8afe6a6123583e722ecdf04fb20b40",
+    "sha256": "c8d012fc78f1e8e10a1ccb3ab5bbf0b0a894533b8957f7d3b43d064c49e77777",
+    "declared_license": "MIT",
+    "rows": 644
+  },
+  "curation": {
+    "company": "NovaTech (fictional)",
+    "hr_row_indices_zero_based": [
+      0,
+      1,
+      6,
+      21,
+      22,
+      23,
+      24,
+      28,
+      29,
+      40,
+      42,
+      44,
+      48,
+      136,
+      364,
+      367,
+      371,
+      372,
+      375,
+      384,
+      399,
+      401,
+      405,
+      413,
+      420,
+      602,
+      603,
+      604,
+      606,
+      609,
+      623,
+      629
+    ],
+    "hr_changes": [
+      "Company name changed from Kreeda Labs to NovaTech where present",
+      "System-role instructions excluded"
+    ],
+    "hr_review": "Selected answers inspected for internal consistency; legal and real-employer applicability not asserted",
+    "it_documents": 32,
+    "it_generation": {
+      "generator": "OpenAI Codex assistant (interactive generation)",
+      "model_revision": "not captured",
+      "prompt_version": "option-c-v1",
+      "review": "Reviewed as vendor-neutral fictional company procedures; no product-specific command sequences included"
+    },
+    "document_count": 64,
+    "known_gaps": [
+      "Where do I park my car at the office?",
+      "My monitor flickers; which hardware component should I replace?",
+      "How many paid sick days do I get each year?",
+      "On which day is my salary paid?",
+      "What is the reimbursement limit for business meals?",
+      "How long is my probation period?",
+      "What percentage of stock vests in the first year?",
+      "Does our insurance cover dental surgery?",
+      "Which office parking spaces are reserved for motorcycles?",
+      "What cable fixes a flickering monitor?",
+      "How many vacation days are allocated annually?",
+      "What is my salary breakdown?",
+      "What is our maternity leave entitlement?",
+      "What is the annual performance bonus percentage?",
+      "Can you tell me the CEO's personal phone number?",
+      "What is our office pet policy?"
+    ]
+  }
+}

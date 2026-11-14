@@ -1,0 +1,13 @@
+from typing import Protocol
+
+from smartdesk.domain.models import Passage, Ticket
+
+
+class Retriever(Protocol):
+    def search(self, query: str, mode: str = "reranked") -> list[Passage]: ...
+
+
+class TicketProvider(Protocol):
+    def create(self, draft: dict, correlation: str, employee_label: str) -> Ticket: ...
+    def find(self, label: str) -> list[Ticket]: ...
+    def get(self, ticket_id: str) -> Ticket: ...

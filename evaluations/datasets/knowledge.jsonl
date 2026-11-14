@@ -1,0 +1,80 @@
+{"id": "hr-000", "query": "What is the review frequency for company policies?", "expected_documents": ["hr-000"], "answerable": true, "split": "development"}
+{"id": "hr-001", "query": "Are staff told when a policy changes significantly?", "expected_documents": ["hr-001"], "answerable": true, "split": "held_out"}
+{"id": "hr-006", "query": "May I give feedback about a policy?", "expected_documents": ["hr-006"], "answerable": true, "split": "development"}
+{"id": "hr-021", "query": "How long do I have to use earned comp time?", "expected_documents": ["hr-021"], "answerable": true, "split": "held_out"}
+{"id": "hr-022", "query": "Does unused comp time roll into the following period?", "expected_documents": ["hr-022"], "answerable": true, "split": "development"}
+{"id": "hr-023", "query": "Can unused compensatory time be paid out?", "expected_documents": ["hr-023"], "answerable": true, "split": "held_out"}
+{"id": "hr-024", "query": "Whose approval is required for comp time?", "expected_documents": ["hr-024"], "answerable": true, "split": "development"}
+{"id": "hr-028", "query": "Can a team leader receive compensatory leave?", "expected_documents": ["hr-028"], "answerable": true, "split": "held_out"}
+{"id": "hr-029", "query": "Who can allow exceptional flexibility for comp time?", "expected_documents": ["hr-029"], "answerable": true, "split": "development"}
+{"id": "hr-040", "query": "Is advance authorization needed before claiming overtime?", "expected_documents": ["hr-040"], "answerable": true, "split": "held_out"}
+{"id": "hr-042", "query": "What steps are required to get compensatory time approved?", "expected_documents": ["hr-042"], "answerable": true, "split": "development"}
+{"id": "hr-044", "query": "What information should my comp-time email contain?", "expected_documents": ["hr-044"], "answerable": true, "split": "held_out"}
+{"id": "hr-048", "query": "Can I take comp time while approval in the leave system is pending?", "expected_documents": ["hr-048"], "answerable": true, "split": "development"}
+{"id": "hr-136", "query": "May I combine comp time with other leave categories?", "expected_documents": ["hr-136"], "answerable": true, "split": "held_out"}
+{"id": "hr-364", "query": "How early should I notify the team of a planned absence?", "expected_documents": ["hr-364"], "answerable": true, "split": "development"}
+{"id": "hr-367", "query": "Do I need an out-of-office message for two days away?", "expected_documents": ["hr-367"], "answerable": true, "split": "held_out"}
+{"id": "hr-371", "query": "How do remote employees signal that they are unavailable?", "expected_documents": ["hr-371"], "answerable": true, "split": "development"}
+{"id": "hr-372", "query": "Can I use my own computer for sensitive work data at home?", "expected_documents": ["hr-372"], "answerable": true, "split": "held_out"}
+{"id": "hr-375", "query": "How should I report an emergency absence?", "expected_documents": ["hr-375"], "answerable": true, "split": "development"}
+{"id": "hr-384", "query": "What should I do if I will miss a remote meeting?", "expected_documents": ["hr-384"], "answerable": true, "split": "held_out"}
+{"id": "hr-399", "query": "How is remote employee performance assessed?", "expected_documents": ["hr-399"], "answerable": true, "split": "development"}
+{"id": "hr-401", "query": "Can remote staff ask for help after receiving review feedback?", "expected_documents": ["hr-401"], "answerable": true, "split": "held_out"}
+{"id": "hr-405", "query": "Can repeated poor performance affect remote-work eligibility?", "expected_documents": ["hr-405"], "answerable": true, "split": "development"}
+{"id": "hr-413", "query": "Can the WFH rules be amended?", "expected_documents": ["hr-413"], "answerable": true, "split": "held_out"}
+{"id": "hr-420", "query": "Do employees have to acknowledge the remote-work policy?", "expected_documents": ["hr-420"], "answerable": true, "split": "development"}
+{"id": "hr-602", "query": "What restrictions apply to disclosing confidential information?", "expected_documents": ["hr-602"], "answerable": true, "split": "held_out"}
+{"id": "hr-603", "query": "Is it okay to share sensitive information with any coworker?", "expected_documents": ["hr-603"], "answerable": true, "split": "development"}
+{"id": "hr-604", "query": "Are client records considered confidential?", "expected_documents": ["hr-604"], "answerable": true, "split": "held_out"}
+{"id": "hr-606", "query": "How should I handle information when its confidentiality is unclear?", "expected_documents": ["hr-606"], "answerable": true, "split": "development"}
+{"id": "hr-609", "query": "May company equipment be used for unauthorized personal gain?", "expected_documents": ["hr-609"], "answerable": true, "split": "held_out"}
+{"id": "hr-623", "query": "Who can receive a report about a conduct violation?", "expected_documents": ["hr-623"], "answerable": true, "split": "development"}
+{"id": "hr-629", "query": "Are good-faith reports protected against retaliation?", "expected_documents": ["hr-629"], "answerable": true, "split": "held_out"}
+{"id": "it-password-reset", "query": "How can I recover a forgotten work password?", "expected_documents": ["it-password-reset"], "answerable": true, "split": "development"}
+{"id": "it-account-lockout", "query": "My account says it is locked; what should I do?", "expected_documents": ["it-account-lockout"], "answerable": true, "split": "held_out"}
+{"id": "it-mfa-enrollment", "query": "How do I enroll in MFA for my work account?", "expected_documents": ["it-mfa-enrollment"], "answerable": true, "split": "development"}
+{"id": "it-mfa-lost-device", "query": "I lost the phone used for work authentication.", "expected_documents": ["it-mfa-lost-device"], "answerable": true, "split": "held_out"}
+{"id": "it-mfa-unexpected", "query": "What should I do about an MFA prompt I did not initiate?", "expected_documents": ["it-mfa-unexpected"], "answerable": true, "split": "development"}
+{"id": "it-vpn-setup", "query": "How do I set up the company VPN?", "expected_documents": ["it-vpn-setup"], "answerable": true, "split": "held_out"}
+{"id": "it-vpn-errors", "query": "The managed VPN is failing to connect; what can I check?", "expected_documents": ["it-vpn-errors"], "answerable": true, "split": "development"}
+{"id": "it-vpn-mac", "query": "Can I use the work VPN on a Mac?", "expected_documents": ["it-vpn-mac"], "answerable": true, "split": "held_out"}
+{"id": "it-wifi-employee", "query": "How should an employee laptop join office wireless?", "expected_documents": ["it-wifi-employee"], "answerable": true, "split": "development"}
+{"id": "it-wifi-guest", "query": "How can a visitor get guest Wi-Fi?", "expected_documents": ["it-wifi-guest"], "answerable": true, "split": "held_out"}
+{"id": "it-software-install", "query": "Where do I get an approved application for my laptop?", "expected_documents": ["it-software-install"], "answerable": true, "split": "development"}
+{"id": "it-software-license", "query": "What details are needed to request a software subscription?", "expected_documents": ["it-software-license"], "answerable": true, "split": "held_out"}
+{"id": "it-software-update", "query": "How do I handle a pending update on my company laptop?", "expected_documents": ["it-software-update"], "answerable": true, "split": "development"}
+{"id": "it-email-mobile", "query": "Can I add my work inbox to a company phone?", "expected_documents": ["it-email-mobile"], "answerable": true, "split": "held_out"}
+{"id": "it-email-sync", "query": "My work mail is not updating; what should I check?", "expected_documents": ["it-email-sync"], "answerable": true, "split": "development"}
+{"id": "it-phishing", "query": "How do I report a suspicious message in my work inbox?", "expected_documents": ["it-phishing"], "answerable": true, "split": "held_out"}
+{"id": "it-shared-drive", "query": "How do I get permission for a team folder?", "expected_documents": ["it-shared-drive"], "answerable": true, "split": "development"}
+{"id": "it-file-sharing", "query": "Can I send a company document to someone outside the company?", "expected_documents": ["it-file-sharing"], "answerable": true, "split": "held_out"}
+{"id": "it-device-loss", "query": "What is the procedure when a company laptop is lost?", "expected_documents": ["it-device-loss"], "answerable": true, "split": "development"}
+{"id": "it-new-device", "query": "How do I get and set up my first company laptop?", "expected_documents": ["it-new-device"], "answerable": true, "split": "held_out"}
+{"id": "it-onboarding-access", "query": "Which account checks should I do on my first day?", "expected_documents": ["it-onboarding-access"], "answerable": true, "split": "development"}
+{"id": "it-device-return", "query": "How do I return my company equipment?", "expected_documents": ["it-device-return"], "answerable": true, "split": "held_out"}
+{"id": "it-screen-lock", "query": "What should I do before leaving my work computer unattended?", "expected_documents": ["it-screen-lock"], "answerable": true, "split": "development"}
+{"id": "it-password-manager", "query": "Where should I keep passwords used for work?", "expected_documents": ["it-password-manager"], "answerable": true, "split": "held_out"}
+{"id": "it-browser-errors", "query": "What information helps IT investigate a failing internal website?", "expected_documents": ["it-browser-errors"], "answerable": true, "split": "development"}
+{"id": "it-meeting-audio", "query": "My meeting microphone does not work; what can I check?", "expected_documents": ["it-meeting-audio"], "answerable": true, "split": "held_out"}
+{"id": "it-printer-access", "query": "How can I get access to an office printer?", "expected_documents": ["it-printer-access"], "answerable": true, "split": "development"}
+{"id": "it-remote-desktop", "query": "Is remote desktop access granted automatically?", "expected_documents": ["it-remote-desktop"], "answerable": true, "split": "held_out"}
+{"id": "it-data-backup", "query": "Where should I save work so it is covered by company storage policies?", "expected_documents": ["it-data-backup"], "answerable": true, "split": "development"}
+{"id": "it-admin-rights", "query": "Can I get administrator access to install a tool?", "expected_documents": ["it-admin-rights"], "answerable": true, "split": "held_out"}
+{"id": "it-ticket-details", "query": "What should I include when reporting an IT problem?", "expected_documents": ["it-ticket-details"], "answerable": true, "split": "development"}
+{"id": "it-support-priority", "query": "How should I describe urgency when opening a support request?", "expected_documents": ["it-support-priority"], "answerable": true, "split": "held_out"}
+{"id": "unknown-00", "query": "Where do I park my car at the office?", "expected_documents": [], "answerable": false, "split": "development"}
+{"id": "unknown-01", "query": "My monitor flickers; which hardware component should I replace?", "expected_documents": [], "answerable": false, "split": "development"}
+{"id": "unknown-02", "query": "How many paid sick days do I get each year?", "expected_documents": [], "answerable": false, "split": "development"}
+{"id": "unknown-03", "query": "On which day is my salary paid?", "expected_documents": [], "answerable": false, "split": "development"}
+{"id": "unknown-04", "query": "What is the reimbursement limit for business meals?", "expected_documents": [], "answerable": false, "split": "development"}
+{"id": "unknown-05", "query": "How long is my probation period?", "expected_documents": [], "answerable": false, "split": "development"}
+{"id": "unknown-06", "query": "What percentage of stock vests in the first year?", "expected_documents": [], "answerable": false, "split": "development"}
+{"id": "unknown-07", "query": "Does our insurance cover dental surgery?", "expected_documents": [], "answerable": false, "split": "development"}
+{"id": "unknown-08", "query": "Which office parking spaces are reserved for motorcycles?", "expected_documents": [], "answerable": false, "split": "held_out"}
+{"id": "unknown-09", "query": "What cable fixes a flickering monitor?", "expected_documents": [], "answerable": false, "split": "held_out"}
+{"id": "unknown-10", "query": "How many vacation days are allocated annually?", "expected_documents": [], "answerable": false, "split": "held_out"}
+{"id": "unknown-11", "query": "What is my salary breakdown?", "expected_documents": [], "answerable": false, "split": "held_out"}
+{"id": "unknown-12", "query": "What is our maternity leave entitlement?", "expected_documents": [], "answerable": false, "split": "held_out"}
+{"id": "unknown-13", "query": "What is the annual performance bonus percentage?", "expected_documents": [], "answerable": false, "split": "held_out"}
+{"id": "unknown-14", "query": "Can you tell me the CEO's personal phone number?", "expected_documents": [], "answerable": false, "split": "held_out"}
+{"id": "unknown-15", "query": "What is our office pet policy?", "expected_documents": [], "answerable": false, "split": "held_out"}
