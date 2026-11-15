@@ -1,5 +1,9 @@
 # Verification record
 
+## RAG package refactor: 2026-11-15
+
+The RAG implementation now lives in `backend/src/smartdesk/rag/`, with separate loading, chunking, embedding, storage, reranking, ingestion, retrieval, generation, grounding, and query-pipeline modules. Validation: 40 backend tests and 4 browser journeys passed; Ruff and Mypy passed. All 64 generated chunk records, including IDs and hashes, exactly matched the pre-refactor implementation. Container ingestion reused the existing collection with 0 indexed, 64 unchanged, and 0 removed. A two-case local-model smoke run exercised dense, sparse, hybrid, and reranked modes successfully; this is a refactor check, not a replacement for the full quality benchmark. No paid OpenAI evaluation was run for this refactor. Existing model-quality limitations below remain applicable.
+
 Local verification on 2026-11-08. Automated workflow tests use provider doubles; they do not establish live provider compatibility or model quality.
 
 ## Completed local checks

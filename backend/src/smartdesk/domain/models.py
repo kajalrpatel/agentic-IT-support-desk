@@ -7,15 +7,6 @@ class Identity:
     email: str
 
 
-@dataclass(frozen=True)
-class Passage:
-    id: str
-    title: str
-    text: str
-    source: str
-    score: float = 0.0
-
-
 @dataclass
 class Ticket:
     id: str

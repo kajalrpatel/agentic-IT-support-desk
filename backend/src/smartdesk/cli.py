@@ -7,8 +7,9 @@ from alembic.config import Config
 from langgraph.checkpoint.postgres import PostgresSaver
 
 from smartdesk.config import get_settings
-from smartdesk.infrastructure.qdrant.retriever import HybridRetriever
-from smartdesk.ingestion.documents import chunks, load_documents
+from smartdesk.rag.chunking import chunks
+from smartdesk.rag.document_loader import load_documents
+from smartdesk.rag.factory import build_rag
 
 
 def main():
@@ -36,7 +37,11 @@ def main():
                 )
             )
         else:
-            print(json.dumps(HybridRetriever(settings).ingest(records)))
+            rag = build_rag(settings)
+            try:
+                print(json.dumps(rag.ingestion.ingest(records)))
+            finally:
+                rag.close()
     else:
         from smartdesk.main import create_app
 

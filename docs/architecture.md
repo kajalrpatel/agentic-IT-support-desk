@@ -1,6 +1,18 @@
 # SmartDesk architecture
 
-The repository contains two independently buildable applications. The backend is a modular monolith with FastAPI transport, LangGraph orchestration, application services, and adapters for OpenAI, Jira, Qdrant, and PostgreSQL. The React frontend uses the versioned API; it does not access provider credentials or databases.
+The repository contains two independently buildable applications. The backend is a modular monolith with FastAPI transport, LangGraph orchestration, chat/ticket application services, and a self-contained `smartdesk.rag` feature. Shared adapters handle OpenAI, Jira, identity, and PostgreSQL; the Qdrant adapter belongs to RAG. The React frontend uses the versioned API; it does not access provider credentials or databases.
+
+## RAG module boundaries
+
+`rag/ingestion.py` owns indexing: `document_loader.py` reads reviewed Markdown, `chunking.py` produces passages, `embedding.py` creates dense/sparse vectors, and `qdrant_store.py` persists them. There is one ingestion implementation. It compares hashes, rejects incompatible index signatures, updates changed chunks, and removes stale chunks only after successful upserts. Ingestion does not load the reranker.
+
+`rag/retrieval.py` owns query embedding, candidate search, optional reranking, score filtering, and final context selection. Qdrant-specific requests and native RRF fusion stay in `qdrant_store.py`. Cross-encoder model loading and ranking stay in `reranking.py`. Both embedding and reranking adapters load lazily. Retrieval concurrency remains bounded to two calls per pipeline instance.
+
+`rag/query_pipeline.py` is the grounded-answer entry point used by the conversation graph. It calls retrieval, `answer_generation.py`, and `grounding.py`. It returns `AnswerResult` from `rag/models.py`; the graph converts this into the API's `ChatResponse`. RAG does not import FastAPI schemas, Jira services, or conversation storage. `rag/interfaces.py` declares component contracts so pipelines can run with alternative implementations or controlled test doubles.
+
+`rag/factory.py` constructs concrete embedding, store, and reranking components for application startup, the CLI, and evaluation. Its returned component bundle owns the Qdrant client and must be closed by the caller. The shared OpenAI client remains in `infrastructure/llm/` because routing and conversation summarization also use it; answer and verifier prompts belong to `rag/prompts/`.
+
+This refactor preserves the `paragraph-v1` chunker, content hashes, UUID-based point IDs, named vectors, collection name, and index signature format. Existing collections can be reused. It does not change retrieval thresholds or resolve the documented model false-escalation issues.
 
 ```mermaid
 flowchart LR

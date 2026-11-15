@@ -9,8 +9,11 @@ from pydantic import BaseModel
 
 from smartdesk.config import Settings
 from smartdesk.domain.models import ServiceError
+from smartdesk.rag.models import EvidenceVerdict, GroundedAnswer
 
 T = TypeVar("T", bound=BaseModel)
+
+SERVICE_UNAVAILABLE = "Sorry, I can't respond right now. Please try again later."
 
 
 class Route(BaseModel):
@@ -22,21 +25,6 @@ class Route(BaseModel):
     category: Literal["IT", "HR"]
     priority: Literal["Low", "Medium", "High", "Critical"]
     ticket_id: str | None
-
-
-class Claim(BaseModel):
-    text: str
-    citation_ids: list[str]
-
-
-class GroundedAnswer(BaseModel):
-    answerable: bool
-    claims: list[Claim]
-
-
-class EvidenceVerdict(BaseModel):
-    supported: bool
-    reason: str
 
 
 class ConversationSummary(BaseModel):
@@ -54,9 +42,7 @@ class LanguageModel:
 
     def parse(self, prompt: str, data: dict, schema: type[T]) -> T:
         if not self.settings.openai_api_key.get_secret_value():
-            raise ServiceError(
-                "The answer service is not configured yet. Please contact the workspace administrator."
-            )
+            raise ServiceError(SERVICE_UNAVAILABLE)
         try:
             started = time.monotonic()
             result = self.client.responses.parse(
@@ -75,9 +61,7 @@ class LanguageModel:
                 store=False,
             )
             if result.output_parsed is None:
-                raise ServiceError(
-                    "The model could not produce a valid response. Please try again."
-                )
+                raise ServiceError(SERVICE_UNAVAILABLE)
             structlog.get_logger().info(
                 "model_call",
                 schema=schema.__name__,
@@ -88,9 +72,23 @@ class LanguageModel:
             )
             return result.output_parsed
         except APIError as exc:
-            raise ServiceError(
-                "The language service is temporarily unavailable. Please try again."
-            ) from exc
+            code = getattr(exc, "code", None)
+            status = getattr(exc, "status_code", None)
+            if code == "project_spend_limit_exceeded":
+                category = "project_spend_limit"
+            elif code in {"insufficient_quota", "billing_hard_limit_reached"}:
+                category = "quota_exhausted"
+            elif status == 429:
+                category = "rate_limited"
+            elif status in {401, 403} or code == "model_not_found":
+                category = "access_denied"
+            else:
+                category = "provider_unavailable"
+            # Do not log the provider body: authentication errors can include key fragments.
+            structlog.get_logger().warning(
+                "model_call_failed", category=category, status=status, model=self.settings.llm_model
+            )
+            raise ServiceError(SERVICE_UNAVAILABLE) from exc
 
     def route(self, data: dict) -> Route:
         return self.parse(self.prompt("router"), data, Route)
@@ -106,4 +104,6 @@ class LanguageModel:
 
     @staticmethod
     def prompt(name: str) -> str:
-        return (Path(__file__).parents[2] / "prompts" / f"{name}.txt").read_text(encoding="utf-8")
+        root = Path(__file__).parents[2]
+        folder = root / "rag" / "prompts" if name in {"answer", "verify"} else root / "prompts"
+        return (folder / f"{name}.txt").read_text(encoding="utf-8")

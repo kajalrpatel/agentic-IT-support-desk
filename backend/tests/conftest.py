@@ -6,23 +6,21 @@ import pytest
 from fastapi.testclient import TestClient
 from langgraph.checkpoint.sqlite import SqliteSaver
 
-from smartdesk.application.answer_service import AnswerService
 from smartdesk.application.chat_service import ChatService
 from smartdesk.application.ticket_service import TicketService
 from smartdesk.bootstrap import Services
 from smartdesk.config import Settings
-from smartdesk.domain.models import Identity, Passage, ServiceError, Ticket
+from smartdesk.domain.models import Identity, ServiceError, Ticket
 from smartdesk.infrastructure.identity.auth import Auth
 from smartdesk.infrastructure.llm.client import (
-    Claim,
     ConversationSummary,
-    EvidenceVerdict,
-    GroundedAnswer,
     Route,
 )
 from smartdesk.infrastructure.postgres.models import Base
 from smartdesk.infrastructure.postgres.repository import Repository
 from smartdesk.main import create_app
+from smartdesk.rag.models import Claim, EvidenceVerdict, GroundedAnswer, Passage
+from smartdesk.rag.query_pipeline import QueryPipeline
 from smartdesk.workflows.graph import build_graph
 
 
@@ -127,7 +125,7 @@ def system(tmp_path):
     saver = SqliteSaver(connection)
     model, retriever, provider = FakeModel(), FakeRetriever(), FakeTickets()
     ticket_service = TicketService(repo, provider)
-    graph = build_graph(model, AnswerService(retriever, model), ticket_service, saver)
+    graph = build_graph(model, QueryPipeline(retriever, model), ticket_service, saver)
     chat = ChatService(repo, graph, rate_limit=100)
     identity = Identity("jane", "jane@example.com")
     conversation = repo.create_conversation(identity.user_id).id

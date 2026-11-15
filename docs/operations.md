@@ -30,6 +30,8 @@ For application rollback, deploy the prior frontend/backend image tags and compa
 
 ## Observability and limits
 
+OpenAI failures are classified without logging provider bodies or key fragments. A project spending-limit error requires the project administrator to review the applicable spend controls; repeated requests do not restore access. All model-service failures return the same friendly user message without provider, budget, quota, or configuration details. Quota/billing exhaustion, request rate limiting, credential/model access errors, and temporary provider failures remain distinct categories in backend logs. Inspect the safe `model_call_failed` log category when diagnosing a failure. Existing chat messages retain their original text; the updated error message appears on new requests.
+
 Request logs contain generated request IDs, status, and latency without request bodies or credentials. Model logs include model name, token counts, and duration. FastAPI has OpenTelemetry instrumentation; an SDK/exporter must be configured for external trace collection. No telemetry backend has been deployed.
 
 Per-user chat rate limiting is enforced against persisted request timestamps. API and model timeouts, bounded safe-call retries, and output limits are configured. Nginx limits request size. CPU model inference is bounded to a small thread count; profile concurrent requests before increasing replicas or moving inference to a separate service. Health readiness checks database access; it is not proof that the paid LLM, Jira permissions, and index are ready.

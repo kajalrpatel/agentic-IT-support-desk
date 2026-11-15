@@ -5,10 +5,10 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import interrupt
 
 from smartdesk.api.schemas import ChatResponse, Draft, TicketView
-from smartdesk.application.answer_service import AnswerService
 from smartdesk.application.ticket_service import TicketService
 from smartdesk.domain.models import Identity, ServiceError
 from smartdesk.infrastructure.llm.client import LanguageModel
+from smartdesk.rag.query_pipeline import QueryPipeline
 
 
 class ChatState(TypedDict, total=False):
@@ -31,7 +31,7 @@ class ChatState(TypedDict, total=False):
 
 
 def build_graph(
-    model: LanguageModel, answers: AnswerService, tickets: TicketService, checkpointer: Any
+    model: LanguageModel, answers: QueryPipeline, tickets: TicketService, checkpointer: Any
 ):
     def route(state: ChatState):
         summary = state.get("summary", "")
@@ -60,7 +60,8 @@ def build_graph(
         }
 
     def knowledge(state: ChatState):
-        return {"response": answers.answer(state["route"]["standalone_query"]).model_dump()}
+        result = answers.answer(state["route"]["standalone_query"])
+        return {"response": ChatResponse(**result.model_dump()).model_dump()}
 
     def reply(state: ChatState):
         fallback = (

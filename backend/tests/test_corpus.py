@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from smartdesk.ingestion.documents import chunks, load_documents
+from smartdesk.rag.chunking import chunks
+from smartdesk.rag.document_loader import load_documents
 
 
 def test_corpus_has_provenance_and_both_domains():

@@ -29,12 +29,26 @@ The interface and health checks can start without provider credentials. Answer g
 backend/
   src/smartdesk/
     api/                 Request and response contracts
-    application/         Chat, answer, and ticket services
+    application/         Chat and ticket services
     domain/              Provider-independent models and errors
     workflows/           Persistent LangGraph orchestration
-    infrastructure/      Identity, PostgreSQL, OpenAI, Jira, Qdrant adapters
-    ingestion/           Reviewed document loading and chunking
-    prompts/             Versioned model instructions
+    infrastructure/      Shared identity, PostgreSQL, OpenAI, and Jira adapters
+    rag/                 Complete ingestion, retrieval, and grounded-answer feature
+      document_loader.py Reviewed Markdown loading
+      chunking.py        Paragraph chunking and stable content hashes
+      embedding.py       Local dense and sparse embeddings
+      qdrant_store.py    Database operations and native hybrid fusion
+      reranking.py       Local cross-encoder scoring
+      ingestion.py       Incremental indexing pipeline
+      retrieval.py       Query embedding, search, reranking, and context selection
+      answer_generation.py Source-based claim generation
+      grounding.py       Citation validation and evidence verification
+      query_pipeline.py Public grounded-answer entry point
+      models.py          RAG data contracts
+      interfaces.py      Replaceable component contracts
+      factory.py         Component construction and resource ownership
+      prompts/           Answer and verification instructions
+    prompts/             Conversation routing and summarization instructions
   migrations/            Application schema migrations
   scripts/               Dataset import and corpus preparation
   tests/                 Workflow, API, authorization, and provider tests

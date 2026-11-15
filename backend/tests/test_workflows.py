@@ -3,9 +3,9 @@ from uuid import uuid4
 import pytest
 
 from smartdesk.api.schemas import ApprovalInput, Draft, MessageInput
-from smartdesk.application.answer_service import AnswerService
 from smartdesk.application.chat_service import ChatService
 from smartdesk.domain.models import Identity, ServiceError
+from smartdesk.rag.query_pipeline import QueryPipeline
 from smartdesk.workflows.graph import build_graph
 
 
@@ -95,7 +95,7 @@ def test_conversational_confirmation(system):
 def test_restart_restores_pending_approval(system):
     reply = send(system, "Create a ticket")
     graph = build_graph(
-        system.model, AnswerService(system.retriever, system.model), system.tickets, system.saver
+        system.model, QueryPipeline(system.retriever, system.model), system.tickets, system.saver
     )
     chat = ChatService(system.repo, graph)
     result = chat.process(

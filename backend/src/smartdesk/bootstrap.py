@@ -3,7 +3,6 @@ from dataclasses import dataclass
 
 from langgraph.checkpoint.postgres import PostgresSaver
 
-from smartdesk.application.answer_service import AnswerService
 from smartdesk.application.chat_service import ChatService
 from smartdesk.application.ticket_service import TicketService
 from smartdesk.config import Settings
@@ -11,7 +10,8 @@ from smartdesk.infrastructure.identity.auth import Auth
 from smartdesk.infrastructure.jira.client import JiraClient
 from smartdesk.infrastructure.llm.client import LanguageModel
 from smartdesk.infrastructure.postgres.repository import Repository
-from smartdesk.infrastructure.qdrant.retriever import HybridRetriever
+from smartdesk.rag.factory import build_rag
+from smartdesk.rag.query_pipeline import QueryPipeline
 from smartdesk.workflows.graph import build_graph
 
 
@@ -30,12 +30,12 @@ def bootstrap(settings: Settings, stack: ExitStack) -> Services:
     # Checkpointer migrations are run explicitly by `smartdesk migrate`.
     model = LanguageModel(settings)
     stack.callback(model.client.close)
-    retriever = HybridRetriever(settings)
-    stack.callback(retriever.client.close)
+    rag = build_rag(settings)
+    stack.callback(rag.close)
     jira = JiraClient(settings)
     stack.callback(jira.client.close)
     graph = build_graph(
-        model, AnswerService(retriever, model), TicketService(repo, jira), checkpointer
+        model, QueryPipeline(rag.retrieval, model), TicketService(repo, jira), checkpointer
     )
     return Services(
         repo, ChatService(repo, graph, settings.max_messages_per_minute), Auth(settings), settings
