@@ -8,8 +8,8 @@ from openai import APIError, OpenAI, omit
 from pydantic import BaseModel
 
 from smartdesk.config import Settings
-from smartdesk.domain.models import ServiceError
-from smartdesk.rag.models import EvidenceVerdict, GroundedAnswer
+from smartdesk.domain.support_models import ServiceError
+from smartdesk.rag.rag_models import EvidenceVerdict, GroundedAnswer
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -105,5 +105,10 @@ class LanguageModel:
     @staticmethod
     def prompt(name: str) -> str:
         root = Path(__file__).parents[2]
-        folder = root / "rag" / "prompts" if name in {"answer", "verify"} else root / "prompts"
-        return (folder / f"{name}.txt").read_text(encoding="utf-8")
+        paths = {
+            "router": root / "conversation_prompts" / "intent_routing.txt",
+            "summary": root / "conversation_prompts" / "conversation_summary.txt",
+            "answer": root / "rag" / "answer_prompts" / "answer_generation.txt",
+            "verify": root / "rag" / "answer_prompts" / "evidence_verification.txt",
+        }
+        return paths[name].read_text(encoding="utf-8")

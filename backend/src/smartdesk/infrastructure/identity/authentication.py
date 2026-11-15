@@ -6,7 +6,7 @@ from fastapi.security import HTTPBearer
 from starlette.concurrency import run_in_threadpool
 
 from smartdesk.config import Settings
-from smartdesk.domain.models import Identity
+from smartdesk.domain.support_models import Identity
 
 
 class Auth:

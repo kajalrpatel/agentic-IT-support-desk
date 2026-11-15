@@ -4,7 +4,7 @@ import time
 import httpx
 
 from smartdesk.config import Settings
-from smartdesk.domain.models import ServiceError, Ticket, TicketWriteRejected
+from smartdesk.domain.support_models import ServiceError, Ticket, TicketWriteRejected
 
 
 def plain_text(value) -> str:

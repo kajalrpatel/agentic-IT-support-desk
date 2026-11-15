@@ -2,7 +2,7 @@
 
 from alembic import op
 
-from smartdesk.infrastructure.postgres.models import Base
+from smartdesk.infrastructure.postgres.database_models import Base
 
 revision = "0001"
 down_revision = None

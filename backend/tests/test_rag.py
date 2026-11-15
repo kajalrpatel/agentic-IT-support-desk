@@ -4,8 +4,8 @@ import pytest
 from qdrant_client import QdrantClient
 
 from smartdesk.rag.ingestion import IngestionPipeline
-from smartdesk.rag.models import Embedding
 from smartdesk.rag.qdrant_store import QdrantStore
+from smartdesk.rag.rag_models import Embedding
 from smartdesk.rag.retrieval import RetrievalPipeline
 
 

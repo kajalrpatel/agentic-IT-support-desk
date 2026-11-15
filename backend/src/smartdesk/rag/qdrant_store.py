@@ -2,7 +2,7 @@ from uuid import NAMESPACE_URL, uuid5
 
 from qdrant_client import QdrantClient, models
 
-from smartdesk.rag.models import Chunk, Embedding, Passage
+from smartdesk.rag.rag_models import Chunk, Embedding, Passage
 
 
 class QdrantStore:

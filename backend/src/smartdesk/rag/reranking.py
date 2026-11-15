@@ -3,7 +3,7 @@ from dataclasses import replace
 
 from fastembed.rerank.cross_encoder import TextCrossEncoder
 
-from smartdesk.rag.models import Passage
+from smartdesk.rag.rag_models import Passage
 
 
 class FastEmbedReranker:

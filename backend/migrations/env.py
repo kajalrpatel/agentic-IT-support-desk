@@ -2,7 +2,7 @@ from alembic import context
 from sqlalchemy import create_engine
 
 from smartdesk.config import get_settings
-from smartdesk.infrastructure.postgres.models import Base
+from smartdesk.infrastructure.postgres.database_models import Base
 
 engine = create_engine(get_settings().database_url)
 with engine.connect() as connection:

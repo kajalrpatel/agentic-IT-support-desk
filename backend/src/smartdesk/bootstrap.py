@@ -6,13 +6,13 @@ from langgraph.checkpoint.postgres import PostgresSaver
 from smartdesk.application.chat_service import ChatService
 from smartdesk.application.ticket_service import TicketService
 from smartdesk.config import Settings
-from smartdesk.infrastructure.identity.auth import Auth
-from smartdesk.infrastructure.jira.client import JiraClient
-from smartdesk.infrastructure.llm.client import LanguageModel
-from smartdesk.infrastructure.postgres.repository import Repository
-from smartdesk.rag.factory import build_rag
+from smartdesk.infrastructure.identity.authentication import Auth
+from smartdesk.infrastructure.jira.jira_client import JiraClient
+from smartdesk.infrastructure.llm.openai_client import LanguageModel
+from smartdesk.infrastructure.postgres.conversation_repository import Repository
 from smartdesk.rag.query_pipeline import QueryPipeline
-from smartdesk.workflows.graph import build_graph
+from smartdesk.rag.rag_factory import build_rag
+from smartdesk.workflows.conversation_workflow import build_graph
 
 
 @dataclass

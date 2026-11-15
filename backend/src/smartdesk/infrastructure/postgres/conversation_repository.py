@@ -6,8 +6,8 @@ from uuid import uuid4
 from sqlalchemy import create_engine, select, text
 from sqlalchemy.orm import sessionmaker
 
-from smartdesk.domain.models import ServiceError
-from smartdesk.infrastructure.postgres.models import Conversation, Message
+from smartdesk.domain.support_models import ServiceError
+from smartdesk.infrastructure.postgres.database_models import Conversation, Message
 
 
 class Repository:

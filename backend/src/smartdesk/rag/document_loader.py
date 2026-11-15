@@ -2,7 +2,7 @@ from pathlib import Path
 
 import yaml
 
-from smartdesk.rag.models import Document
+from smartdesk.rag.rag_models import Document
 
 
 def load_documents(root: Path) -> list[Document]:

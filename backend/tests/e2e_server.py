@@ -10,12 +10,12 @@ from smartdesk.application.chat_service import ChatService
 from smartdesk.application.ticket_service import TicketService
 from smartdesk.bootstrap import Services
 from smartdesk.config import Settings
-from smartdesk.infrastructure.identity.auth import Auth
-from smartdesk.infrastructure.postgres.models import Base
-from smartdesk.infrastructure.postgres.repository import Repository
+from smartdesk.infrastructure.identity.authentication import Auth
+from smartdesk.infrastructure.postgres.conversation_repository import Repository
+from smartdesk.infrastructure.postgres.database_models import Base
 from smartdesk.main import create_app
 from smartdesk.rag.query_pipeline import QueryPipeline
-from smartdesk.workflows.graph import build_graph
+from smartdesk.workflows.conversation_workflow import build_graph
 from tests.conftest import FakeModel, FakeRetriever, FakeTickets
 
 root = Path(".cache") / ("browser-" + str(uuid4()))

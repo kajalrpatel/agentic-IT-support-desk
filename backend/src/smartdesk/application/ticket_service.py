@@ -3,11 +3,11 @@ import json
 from dataclasses import asdict
 from uuid import NAMESPACE_URL, uuid5
 
-from smartdesk.api.schemas import Draft
-from smartdesk.application.ports import TicketProvider
-from smartdesk.domain.models import Identity, ServiceError, Ticket, TicketWriteRejected
-from smartdesk.infrastructure.postgres.models import TicketAttempt
-from smartdesk.infrastructure.postgres.repository import Repository
+from smartdesk.api.api_schemas import Draft
+from smartdesk.application.ticket_provider import TicketProvider
+from smartdesk.domain.support_models import Identity, ServiceError, Ticket, TicketWriteRejected
+from smartdesk.infrastructure.postgres.conversation_repository import Repository
+from smartdesk.infrastructure.postgres.database_models import TicketAttempt
 
 
 def employee_label(email: str) -> str:

@@ -1,7 +1,7 @@
 from dataclasses import asdict
 
-from smartdesk.rag.interfaces import AnswerModel
-from smartdesk.rag.models import GroundedAnswer, Passage
+from smartdesk.rag.rag_interfaces import AnswerModel
+from smartdesk.rag.rag_models import GroundedAnswer, Passage
 
 
 class AnswerGenerator:

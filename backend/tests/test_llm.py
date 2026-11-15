@@ -5,8 +5,8 @@ import pytest
 from openai import APIStatusError
 
 from smartdesk.config import Settings
-from smartdesk.domain.models import ServiceError
-from smartdesk.infrastructure.llm.client import ConversationSummary, LanguageModel
+from smartdesk.domain.support_models import ServiceError
+from smartdesk.infrastructure.llm.openai_client import ConversationSummary, LanguageModel
 
 
 @pytest.mark.parametrize(

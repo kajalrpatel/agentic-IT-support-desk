@@ -1,8 +1,8 @@
 import threading
 
-from smartdesk.domain.models import ServiceError
-from smartdesk.rag.interfaces import Embedder, KnowledgeStore, Reranker
-from smartdesk.rag.models import Passage
+from smartdesk.domain.support_models import ServiceError
+from smartdesk.rag.rag_interfaces import Embedder, KnowledgeStore, Reranker
+from smartdesk.rag.rag_models import Passage
 
 
 class RetrievalPipeline:

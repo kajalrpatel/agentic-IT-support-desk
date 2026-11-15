@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from sqlalchemy import text
 
-from smartdesk.api.schemas import (
+from smartdesk.api.api_schemas import (
     ApprovalInput,
     ChatResponse,
     ConversationView,
@@ -20,8 +20,8 @@ from smartdesk.api.schemas import (
 )
 from smartdesk.bootstrap import Services, bootstrap
 from smartdesk.config import Settings, get_settings
-from smartdesk.domain.models import Identity, ServiceError
-from smartdesk.infrastructure.identity.auth import current_identity
+from smartdesk.domain.support_models import Identity, ServiceError
+from smartdesk.infrastructure.identity.authentication import current_identity
 
 structlog.configure(
     processors=[structlog.processors.TimeStamper(fmt="iso"), structlog.processors.JSONRenderer()]

@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from smartdesk.domain.models import Ticket
+from smartdesk.domain.support_models import Ticket
 
 
 class TicketProvider(Protocol):

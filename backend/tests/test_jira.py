@@ -2,8 +2,8 @@ import httpx
 import pytest
 
 from smartdesk.config import Settings
-from smartdesk.domain.models import ServiceError
-from smartdesk.infrastructure.jira.client import JiraClient
+from smartdesk.domain.support_models import ServiceError
+from smartdesk.infrastructure.jira.jira_client import JiraClient
 
 
 def jira(handler):

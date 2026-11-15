@@ -4,10 +4,10 @@ from typing import Any, TypedDict
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import interrupt
 
-from smartdesk.api.schemas import ChatResponse, Draft, TicketView
+from smartdesk.api.api_schemas import ChatResponse, Draft, TicketView
 from smartdesk.application.ticket_service import TicketService
-from smartdesk.domain.models import Identity, ServiceError
-from smartdesk.infrastructure.llm.client import LanguageModel
+from smartdesk.domain.support_models import Identity, ServiceError
+from smartdesk.infrastructure.llm.openai_client import LanguageModel
 from smartdesk.rag.query_pipeline import QueryPipeline
 
 

@@ -10,9 +10,9 @@ from pathlib import Path
 from qdrant_client import QdrantClient
 
 from smartdesk.config import Settings
-from smartdesk.infrastructure.llm.client import LanguageModel
-from smartdesk.rag.factory import build_rag
+from smartdesk.infrastructure.llm.openai_client import LanguageModel
 from smartdesk.rag.query_pipeline import QueryPipeline
+from smartdesk.rag.rag_factory import build_rag
 
 ROOT = Path(__file__).resolve().parents[2]
 

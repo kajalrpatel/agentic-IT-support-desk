@@ -6,10 +6,10 @@ import structlog
 from langgraph.types import Command
 from sqlalchemy import func, select
 
-from smartdesk.api.schemas import ApprovalInput, ChatResponse, MessageInput
-from smartdesk.domain.models import Identity, ServiceError
-from smartdesk.infrastructure.postgres.models import Conversation, Message, Request
-from smartdesk.infrastructure.postgres.repository import Repository
+from smartdesk.api.api_schemas import ApprovalInput, ChatResponse, MessageInput
+from smartdesk.domain.support_models import Identity, ServiceError
+from smartdesk.infrastructure.postgres.conversation_repository import Repository
+from smartdesk.infrastructure.postgres.database_models import Conversation, Message, Request
 
 
 class ChatService:

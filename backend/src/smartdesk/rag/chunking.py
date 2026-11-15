@@ -1,7 +1,7 @@
 import hashlib
 from collections.abc import Iterator
 
-from smartdesk.rag.models import Chunk, Document
+from smartdesk.rag.rag_models import Chunk, Document
 
 CHUNKER_VERSION = "paragraph-v1"
 

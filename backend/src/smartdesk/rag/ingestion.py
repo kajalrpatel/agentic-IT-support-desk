@@ -2,8 +2,8 @@ from pathlib import Path
 
 from smartdesk.rag.chunking import CHUNKER_VERSION, chunks
 from smartdesk.rag.document_loader import load_documents
-from smartdesk.rag.interfaces import Embedder, KnowledgeStore
-from smartdesk.rag.models import Chunk
+from smartdesk.rag.rag_interfaces import Embedder, KnowledgeStore
+from smartdesk.rag.rag_models import Chunk
 
 
 class IngestionPipeline:

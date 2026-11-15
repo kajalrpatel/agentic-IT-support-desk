@@ -2,7 +2,7 @@ import threading
 
 from fastembed import SparseTextEmbedding, TextEmbedding
 
-from smartdesk.rag.models import Embedding
+from smartdesk.rag.rag_models import Embedding
 
 
 class FastEmbedEmbedding:

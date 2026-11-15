@@ -1,6 +1,6 @@
 from typing import Protocol
 
-from smartdesk.rag.models import Chunk, Embedding, EvidenceVerdict, GroundedAnswer, Passage
+from smartdesk.rag.rag_models import Chunk, Embedding, EvidenceVerdict, GroundedAnswer, Passage
 
 
 class Embedder(Protocol):

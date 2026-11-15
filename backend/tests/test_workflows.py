@@ -2,11 +2,11 @@ from uuid import uuid4
 
 import pytest
 
-from smartdesk.api.schemas import ApprovalInput, Draft, MessageInput
+from smartdesk.api.api_schemas import ApprovalInput, Draft, MessageInput
 from smartdesk.application.chat_service import ChatService
-from smartdesk.domain.models import Identity, ServiceError
+from smartdesk.domain.support_models import Identity, ServiceError
 from smartdesk.rag.query_pipeline import QueryPipeline
-from smartdesk.workflows.graph import build_graph
+from smartdesk.workflows.conversation_workflow import build_graph
 
 
 def send(system, text):

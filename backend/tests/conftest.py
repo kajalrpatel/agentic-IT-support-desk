@@ -10,18 +10,18 @@ from smartdesk.application.chat_service import ChatService
 from smartdesk.application.ticket_service import TicketService
 from smartdesk.bootstrap import Services
 from smartdesk.config import Settings
-from smartdesk.domain.models import Identity, ServiceError, Ticket
-from smartdesk.infrastructure.identity.auth import Auth
-from smartdesk.infrastructure.llm.client import (
+from smartdesk.domain.support_models import Identity, ServiceError, Ticket
+from smartdesk.infrastructure.identity.authentication import Auth
+from smartdesk.infrastructure.llm.openai_client import (
     ConversationSummary,
     Route,
 )
-from smartdesk.infrastructure.postgres.models import Base
-from smartdesk.infrastructure.postgres.repository import Repository
+from smartdesk.infrastructure.postgres.conversation_repository import Repository
+from smartdesk.infrastructure.postgres.database_models import Base
 from smartdesk.main import create_app
-from smartdesk.rag.models import Claim, EvidenceVerdict, GroundedAnswer, Passage
 from smartdesk.rag.query_pipeline import QueryPipeline
-from smartdesk.workflows.graph import build_graph
+from smartdesk.rag.rag_models import Claim, EvidenceVerdict, GroundedAnswer, Passage
+from smartdesk.workflows.conversation_workflow import build_graph
 
 
 class FakeModel:

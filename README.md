@@ -44,11 +44,11 @@ backend/
       answer_generation.py Source-based claim generation
       grounding.py       Citation validation and evidence verification
       query_pipeline.py Public grounded-answer entry point
-      models.py          RAG data contracts
-      interfaces.py      Replaceable component contracts
-      factory.py         Component construction and resource ownership
-      prompts/           Answer and verification instructions
-    prompts/             Conversation routing and summarization instructions
+      rag_models.py      RAG data contracts
+      rag_interfaces.py  Replaceable RAG component contracts
+      rag_factory.py     RAG component construction and resource ownership
+      answer_prompts/    Answer generation and evidence verification instructions
+    conversation_prompts/ Intent routing and conversation summarization instructions
   migrations/            Application schema migrations
   scripts/               Dataset import and corpus preparation
   tests/                 Workflow, API, authorization, and provider tests
@@ -96,6 +96,7 @@ See [verification results](docs/verification.md) and [retrieval metrics](evaluat
 The corpus includes adapted HR source material and explicitly synthetic IT guidance; it is not a real employer's policy. The original HR dataset's scope is narrower than all HR questions. Unsupported topics should escalate. See [dataset provenance and gaps](docs/datasets.md).
 
 - [Architecture and conversation memory](docs/architecture.md)
+- [Backend naming guide](docs/backend_naming.md)
 - [Operations, authentication, backup, and deployment](docs/operations.md)
 - [Demo walkthrough](docs/demo.md)
 - [Evaluation commands and limitations](evaluations/README.md)

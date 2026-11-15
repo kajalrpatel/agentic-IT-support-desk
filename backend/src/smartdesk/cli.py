@@ -9,7 +9,7 @@ from langgraph.checkpoint.postgres import PostgresSaver
 from smartdesk.config import get_settings
 from smartdesk.rag.chunking import chunks
 from smartdesk.rag.document_loader import load_documents
-from smartdesk.rag.factory import build_rag
+from smartdesk.rag.rag_factory import build_rag
 
 
 def main():
