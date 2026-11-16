@@ -1,75 +1,147 @@
 {
-  "verified_at": "2026-11-08",
-  "corpus_documents": 64,
-  "cases_per_split": 40,
-  "answerable_per_split": 32,
-  "retrieval": {
-    "development": {
-      "dense": {
-        "recall_at_5": 1.0,
-        "mrr": 0.9151041666666667,
-        "mean_latency_ms": 42.075
-      },
-      "sparse": {
-        "recall_at_5": 0.875,
-        "mrr": 0.6458333333333334,
-        "mean_latency_ms": 34.990625
-      },
-      "hybrid": {
-        "recall_at_5": 0.96875,
-        "mrr": 0.8776041666666666,
-        "mean_latency_ms": 39.425
-      },
-      "reranked": {
-        "recall_at_5": 0.96875,
-        "mrr": 0.8723958333333334,
-        "mean_latency_ms": 1511.41875
-      }
-    },
-    "held_out": {
-      "dense": {
-        "recall_at_5": 0.96875,
-        "mrr": 0.8645833333333334,
-        "mean_latency_ms": 12.196875
-      },
-      "sparse": {
-        "recall_at_5": 0.875,
-        "mrr": 0.8203125,
-        "mean_latency_ms": 12.075
-      },
-      "hybrid": {
-        "recall_at_5": 1.0,
-        "mrr": 0.8619791666666666,
-        "mean_latency_ms": 17.578125
-      },
-      "reranked": {
-        "recall_at_5": 1.0,
-        "mrr": 0.8901041666666667,
-        "mean_latency_ms": 709.046875
-      }
-    }
-  },
-  "live_llm_evaluation": {
-    "date": "2026-11-14",
-    "model": "gpt-4o-mini",
-    "api_access": "verified",
-    "smoke_passed": 4,
-    "smoke_total": 6,
-    "failed_cases": [
-      "follow_up",
-      "hr_answer"
-    ],
-    "full_held_out_evaluation": "not run",
-    "limitations": "Development smoke tests showed false escalation on answerable follow-up and HR questions. No claim of production answer quality."
-  },
-  "live_jira_smoke_test": {
-    "result": "passed",
-    "ticket_id": "SCRUM-5",
-    "status": "To Do"
-  },
-  "limitations": [
-    "Assistant-authored evaluation cases; not an independently labeled benchmark.",
-    "Local embedded Qdrant timings; not production load measurements.",
-    "Retrieval recall excludes unanswerable cases; it does not measure abstention or answer faithfulness."
-  ]
+    "verified_at":  "2026-11-08",
+    "corpus_documents":  64,
+    "cases_per_split":  40,
+    "answerable_per_split":  32,
+    "retrieval":  {
+                      "development":  {
+                                          "dense":  {
+                                                        "recall_at_5":  1.0,
+                                                        "mrr":  0.9151041666666667,
+                                                        "mean_latency_ms":  42.075
+                                                    },
+                                          "sparse":  {
+                                                         "recall_at_5":  0.875,
+                                                         "mrr":  0.6458333333333334,
+                                                         "mean_latency_ms":  34.990625
+                                                     },
+                                          "hybrid":  {
+                                                         "recall_at_5":  0.96875,
+                                                         "mrr":  0.8776041666666666,
+                                                         "mean_latency_ms":  39.425
+                                                     },
+                                          "reranked":  {
+                                                           "recall_at_5":  0.96875,
+                                                           "mrr":  0.8723958333333334,
+                                                           "mean_latency_ms":  1511.41875
+                                                       }
+                                      },
+                      "held_out":  {
+                                       "dense":  {
+                                                     "recall_at_5":  0.96875,
+                                                     "mrr":  0.8645833333333334,
+                                                     "mean_latency_ms":  12.196875
+                                                 },
+                                       "sparse":  {
+                                                      "recall_at_5":  0.875,
+                                                      "mrr":  0.8203125,
+                                                      "mean_latency_ms":  12.075
+                                                  },
+                                       "hybrid":  {
+                                                      "recall_at_5":  1.0,
+                                                      "mrr":  0.8619791666666666,
+                                                      "mean_latency_ms":  17.578125
+                                                  },
+                                       "reranked":  {
+                                                        "recall_at_5":  1.0,
+                                                        "mrr":  0.8901041666666667,
+                                                        "mean_latency_ms":  709.046875
+                                                    }
+                                   }
+                  },
+    "live_llm_evaluation":  {
+                                "date":  "2026-11-14",
+                                "model":  "gpt-4o-mini",
+                                "api_access":  "verified",
+                                "smoke_passed":  4,
+                                "smoke_total":  6,
+                                "failed_cases":  [
+                                                     "follow_up",
+                                                     "hr_answer"
+                                                 ],
+                                "full_held_out_evaluation":  "not run",
+                                "limitations":  "Development smoke tests showed false escalation on answerable follow-up and HR questions. No claim of production answer quality."
+                            },
+    "live_jira_smoke_test":  {
+                                 "result":  "passed",
+                                 "ticket_id":  "SCRUM-5",
+                                 "status":  "To Do"
+                             },
+    "limitations":  [
+                        "Assistant-authored evaluation cases; not an independently labeled benchmark.",
+                        "Local embedded Qdrant timings; not production load measurements.",
+                        "Retrieval recall excludes unanswerable cases; it does not measure abstention or answer faithfulness."
+                    ],
+    "multiagent_verification":  {
+                                    "date":  "2026-11-16",
+                                    "backend_tests_passed":  52,
+                                    "additional_publisher_tests_passed":  2,
+                                    "browser_journeys_passed":  4,
+                                    "lint":  "passed",
+                                    "typecheck":  "passed, 43 source files",
+                                    "docker_backend":  "rebuilt, restarted, readiness passed",
+                                    "retrieval_answerable_cases":  32,
+                                    "retrieval":  {
+                                                      "dense":  {
+                                                                    "recall_at_5":  0.96875,
+                                                                    "mean_latency_ms":  13.896875,
+                                                                    "mrr":  0.8645833333333334
+                                                                },
+                                                      "reranked":  {
+                                                                       "recall_at_5":  1.0,
+                                                                       "mean_latency_ms":  846.4875,
+                                                                       "mrr":  0.8901041666666667
+                                                                   },
+                                                      "sparse":  {
+                                                                     "recall_at_5":  0.875,
+                                                                     "mean_latency_ms":  14.190625,
+                                                                     "mrr":  0.8203125
+                                                                 },
+                                                      "hybrid":  {
+                                                                     "recall_at_5":  1.0,
+                                                                     "mean_latency_ms":  17.278125,
+                                                                     "mrr":  0.8619791666666666
+                                                                 }
+                                                  },
+                                    "live_answer_smoke":  {
+                                                              "domain":  "HR",
+                                                              "model":  "gpt-4o-mini",
+                                                              "cases":  2,
+                                                              "false_abstentions":  1,
+                                                              "cited_answers":  1
+                                                          },
+                                    "langsmith":  "Implemented; hosted verification pending configured workspace credentials",
+                                    "answer_evaluation":  "LangSmith custom evaluator implemented; local contract tests only, hosted judge run pending"
+                                },
+    "retired_evaluation_results":  {
+                                       "note":  "Historical results from removed integrations; not current LangSmith scores",
+                                       "ragas":  {
+                                                     "judge_model":  "gpt-4o-mini",
+                                                     "total_answers":  2,
+                                                     "faithfulness":  1,
+                                                     "eligible_cited_answers":  1,
+                                                     "evaluated":  1
+                                                 },
+                                       "deepeval":  {
+                                                        "judge_model":  "gpt-4o-mini",
+                                                        "total_answers":  2,
+                                                        "eligible_cited_answers":  1,
+                                                        "evaluated":  1,
+                                                        "cases":  [
+                                                                      {
+                                                                          "id":  "hr-001",
+                                                                          "metrics":  {
+                                                                                          "faithfulness":  {
+                                                                                                               "score":  1.0,
+                                                                                                               "reason":  "The score is 1.00 because there are no contradictions, indicating that the actual output aligns perfectly with the retrieval context."
+                                                                                                           },
+                                                                                          "answer_relevancy":  {
+                                                                                                                   "score":  1.0,
+                                                                                                                   "reason":  "The score is 1.00 because the response directly addresses the question about staff being informed of significant policy changes without any irrelevant statements."
+                                                                                                               }
+                                                                                      }
+                                                                      }
+                                                                  ]
+                                                    }
+                                   }
 }

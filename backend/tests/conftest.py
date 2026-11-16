@@ -75,7 +75,8 @@ class FakeModel:
 
 
 class FakeRetriever:
-    def search(self, query, mode="reranked"):
+    def search(self, query, mode="reranked", domain=None):
+        self.last_domain = domain
         if "parking" in query.lower():
             return []
         if "outage" in query.lower():

@@ -28,3 +28,6 @@ Conventional entry points remain `main.py` (FastAPI application), `cli.py` (admi
 The frontend's `App.tsx`, `main.tsx`, and `src/api/client.ts` are unambiguous within the frontend package and retain their names. Generated API files retain generator-controlled names. Existing test filenames identify the feature they test rather than mirroring every implementation file.
 
 Prompt selection uses an explicit mapping in `infrastructure/llm/openai_client.py`. Add new prompt purposes there; do not assume a shared generic prompt directory.
+## Agents, tools, and observability
+
+`agents/supervisor_agent.py` resolves and routes support requests. `it_support_agent.py` and `hr_policy_agent.py` compose domain-specific subgraphs using `specialist_graph.py`. `tools/knowledge_search.py` fixes the domain before search; `tools/ticket_tools.py` exposes explicitly named draft, confirmed-creation, and status capabilities. `workflows/conversation_workflow.py` now composes nodes, `conversation_state.py` declares durable state, and `ticket_approval.py` owns human approval transitions. `observability/langsmith_tracing.py` owns tracing configuration. See [agents and evaluation](agents_and_evaluation.md).

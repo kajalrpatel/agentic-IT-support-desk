@@ -23,7 +23,9 @@ class RetrievalPipeline:
         self.min_score = min_score
         self._slots = threading.BoundedSemaphore(2)
 
-    def search(self, query: str, mode: str = "reranked") -> list[Passage]:
+    def search(
+        self, query: str, mode: str = "reranked", domain: str | None = None
+    ) -> list[Passage]:
         if mode not in {"dense", "sparse", "hybrid", "reranked"}:
             raise ValueError("Unknown retrieval mode")
         if not self._slots.acquire(timeout=10):
@@ -31,7 +33,11 @@ class RetrievalPipeline:
         try:
             vectors = self.embedder.embed_query(query)
             passages = self.store.search(
-                vectors, "hybrid" if mode == "reranked" else mode, self.candidate_limit, "employees"
+                vectors,
+                "hybrid" if mode == "reranked" else mode,
+                self.candidate_limit,
+                "employees",
+                domain=domain,
             )
             if mode == "reranked" and passages:
                 passages = self.reranker.rank(query, passages)

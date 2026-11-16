@@ -1,0 +1,41 @@
+from smartdesk.api.api_schemas import ChatResponse
+from smartdesk.infrastructure.llm.openai_client import LanguageModel
+from smartdesk.workflows.conversation_state import ChatState
+
+
+def build_supervisor_nodes(model: LanguageModel):
+    def route_support_request(state: ChatState):
+        summary = state.get("summary", "")
+        summary_count = state.get("summary_count", 0)
+        if state.get("older_history"):
+            summary = model.summarize(
+                {"previous_summary": summary, "older_turns": state["older_history"]}
+            ).summary
+            summary_count = state["history_count"] - len(state["history"])
+        result = model.route(
+            {
+                "message": state["text"],
+                "history": state.get("history", []),
+                "summary": summary,
+                "draft": state.get("draft"),
+                "email": state["email"],
+                "previous_response": state.get("response"),
+            }
+        )
+        return {
+            "route": result.model_dump(),
+            "approved_version": None,
+            "summary": summary,
+            "summary_count": summary_count,
+            "older_history": [],
+        }
+
+    def reply_to_nonknowledge_request(state: ChatState):
+        fallback = (
+            "Which issue or policy are you referring to?"
+            if state["route"]["intent"] == "clarify"
+            else "I can help with employee IT and HR questions. What do you need help with?"
+        )
+        return {"response": ChatResponse(text=state["route"]["reply"] or fallback).model_dump()}
+
+    return route_support_request, reply_to_nonknowledge_request

@@ -8,7 +8,7 @@ The repository contains two independently buildable applications. The backend is
 
 `rag/retrieval.py` owns query embedding, candidate search, optional reranking, score filtering, and final context selection. Qdrant-specific requests and native RRF fusion stay in `qdrant_store.py`. Cross-encoder model loading and ranking stay in `reranking.py`. Both embedding and reranking adapters load lazily. Retrieval concurrency remains bounded to two calls per pipeline instance.
 
-`rag/query_pipeline.py` is the grounded-answer entry point used by the conversation graph. It calls retrieval, `answer_generation.py`, and `grounding.py`. It returns `AnswerResult` from `rag/rag_models.py`; the graph converts this into the API's `ChatResponse`. RAG does not import FastAPI schemas, Jira services, or conversation storage. `rag/rag_interfaces.py` declares component contracts so pipelines can run with alternative implementations or controlled test doubles.
+`rag/query_pipeline.py` remains the standalone grounded-answer entry point and component bundle. The conversation graph delegates to specialised IT and HR agents, which use its retrieval, generation, and verification components as separate graph steps. RAG returns `AnswerResult` from `rag/rag_models.py` and does not import FastAPI schemas, Jira services, or conversation storage. `rag/rag_interfaces.py` declares component contracts so pipelines can run with alternative implementations or controlled test doubles. See [agents and evaluation](agents_and_evaluation.md) for agent/tool boundaries and LangSmith setup.
 
 `rag/rag_factory.py` constructs concrete embedding, store, and reranking components for application startup, the CLI, and evaluation. Its returned component bundle owns the Qdrant client and must be closed by the caller. The shared OpenAI client remains in `infrastructure/llm/` because routing and conversation summarization also use it; answer and verifier prompts belong to `rag/answer_prompts/`.
 
@@ -20,7 +20,10 @@ flowchart LR
   API --> Auth[Demo identity or OIDC JWT validation]
   API --> Chat[Conversation service]
   Chat --> Graph[Persistent LangGraph workflow]
-  Graph --> RAG[Dense + BM25 / RRF / cross-encoder]
+  Graph --> IT[IT support specialist]
+  Graph --> HR[HR policy specialist]
+  IT --> RAG[Domain-filtered dense + BM25 / RRF / cross-encoder]
+  HR --> RAG
   RAG --> Qdrant[(Qdrant)]
   Graph --> Model[Structured LLM routing and evidence checks]
   Graph --> Approval[Versioned draft approval interrupt]

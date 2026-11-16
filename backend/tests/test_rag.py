@@ -107,3 +107,18 @@ def test_empty_corpus_cannot_accidentally_erase_index(components):
     with pytest.raises(ValueError, match="empty corpus"):
         ingestion.ingest([])
     assert set(store.records()) == {"a"}
+
+
+@pytest.mark.parametrize("mode", ["dense", "sparse", "hybrid", "reranked"])
+@pytest.mark.parametrize("domain", ["IT", "HR"])
+def test_domain_filter_applies_before_candidate_selection(components, mode, domain):
+    store, embedder, reranker, ingestion = components
+    ingestion.ingest(
+        [
+            {**record("it"), "domain": "IT"},
+            {**record("hr"), "domain": "HR"},
+            {**record("private", scope="admins"), "domain": domain},
+        ]
+    )
+    retrieval = RetrievalPipeline(embedder, store, reranker, candidate_limit=1)
+    assert [p.id for p in retrieval.search("support", mode, domain=domain)] == [domain.lower()]

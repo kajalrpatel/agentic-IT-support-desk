@@ -21,7 +21,7 @@ Build a modular monolith: one Python backend with explicit module boundaries, a 
 | Frontend | React, TypeScript, Vite | Chat, expandable citations, editable ticket previews, confirmation controls, and ticket selection. |
 | Packaging | Independent backend and frontend packages and Dockerfiles; Docker Compose | Separately buildable and deployable images, with a reproducible local environment containing the API, UI, PostgreSQL, and Qdrant. |
 | Quality | pytest, Ruff, mypy, frontend checks, Playwright, CI | Test business behavior and the complete user flows. |
-| Evaluation | A versioned evaluation runner plus Ragas faithfulness checks | Compare retrieval approaches, inspect unsupported claims, and publish an evidence-based report. |
+| Evaluation | LangSmith experiments with versioned retrieval metrics and custom answer evaluators | Compare retrieval approaches, inspect unsupported claims, and publish an evidence-based report. |
 | Observability | Structured logs and OpenTelemetry instrumentation | Track request latency, retrieval outcomes, failures, and external API calls with redacted identifiers. |
 
 FastAPI supports modular routers and dependency injection. LangGraph documents persistent checkpoints and interrupt/resume behavior, which match the confirmation workflow. [FastAPI documentation](https://fastapi.tiangolo.com/tutorial/bigger-applications/), [LangGraph persistence](https://docs.langchain.com/oss/python/langgraph/persistence), [LangGraph interrupts](https://docs.langchain.com/oss/python/langgraph/interrupts).
@@ -236,7 +236,7 @@ Build evaluation cases as each milestone is implemented. Use development cases f
 
 Initial quality targets are Recall@5 of at least 90% on held-out answerable cases and at least 90% correct abstention on held-out unknown cases, while also reporting false escalations. These are targets, not measured results. All deterministic approval, ownership, and required-field cases must pass. Any unsupported material claim in the final reviewed sample requires investigation and correction; evaluation cannot prove the model will never hallucinate on unseen inputs.
 
-Use Ragas faithfulness as an additional signal, alongside source labels and human review; an LLM judge is not the sole acceptance check. [Ragas faithfulness](https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/faithfulness/).
+Use a custom LangSmith faithfulness evaluator as an additional signal, alongside source labels and human review; an LLM judge is not the sole acceptance check. [LangSmith SDK](https://reference.langchain.com/python/langsmith).
 
 ## 7. Confirmed decisions and remaining inputs
 

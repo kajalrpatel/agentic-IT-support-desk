@@ -19,6 +19,12 @@ class Settings(BaseSettings):
     oidc_jwks_url: str = ""
     openai_api_key: SecretStr = SecretStr("")
     llm_model: str = "gpt-4o-mini"
+    langsmith_tracing: bool = False
+    langsmith_api_key: SecretStr = SecretStr("")
+    langsmith_project: str = "smartdesk-development"
+    langsmith_endpoint: str = "https://api.smith.langchain.com"
+    langsmith_hide_inputs: bool = True
+    langsmith_hide_outputs: bool = True
     reasoning_effort: Literal["none", "minimal", "low", "medium", "high"] | None = None
     max_output_tokens: int = 1800
     jira_base_url: str = ""

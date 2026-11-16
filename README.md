@@ -101,3 +101,6 @@ The corpus includes adapted HR source material and explicitly synthetic IT guida
 - [Demo walkthrough](docs/demo.md)
 - [Evaluation commands and limitations](evaluations/README.md)
 - [Approved implementation plan](IMPLEMENTATION_PLAN.md)
+## Agent architecture and evaluation updates
+
+The backend now has specialised IT/HR LangGraph sub-agents and separate agent, tool, workflow, RAG, and observability modules. See [agents and evaluation](docs/agents_and_evaluation.md) for the current structure, LangSmith configuration, and quantitative evaluation commands.

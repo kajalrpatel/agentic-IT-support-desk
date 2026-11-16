@@ -7,7 +7,9 @@ import time
 from contextlib import ExitStack
 from pathlib import Path
 
+from agent_case import run_agent_case
 from qdrant_client import QdrantClient
+from report_metrics import answer_behavior_scores, compare_retrieval_modes
 
 from smartdesk.config import Settings
 from smartdesk.infrastructure.llm.openai_client import LanguageModel
@@ -29,6 +31,8 @@ def main():
     parser.add_argument("--limit", type=int, default=40)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    if args.limit < 1:
+        parser.error("--limit must be positive")
     settings = Settings(_env_file=ROOT / ".env", model_cache_dir=str(ROOT / ".cache/models"))
     client = QdrantClient(":memory:") if args.local else None
     with ExitStack() as stack:
@@ -95,14 +99,9 @@ def evaluate(args, settings, rag, stack):
         model = LanguageModel(settings)
         stack.callback(model.client.close)
         service = QueryPipeline(retriever, model)
-        report["answers"] = [
-            {
-                "id": case["id"],
-                "expected_answerable": case["answerable"],
-                "response": service.answer(case["query"]).model_dump(),
-            }
-            for case in cases
-        ]
+        report["answers"] = [run_agent_case(model, service, case) for case in cases]
+        report["answer_behavior"] = answer_behavior_scores(report["answers"])
+    report["comparison_vs_dense"] = compare_retrieval_modes(report["modes"])
     path = args.output or ROOT / f"evaluations/reports/{args.split}.json"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

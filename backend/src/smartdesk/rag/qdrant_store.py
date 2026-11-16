@@ -71,7 +71,14 @@ class QdrantStore:
     def _sparse(vector: Embedding) -> models.SparseVector:
         return models.SparseVector(indices=vector.sparse_indices, values=vector.sparse_values)
 
-    def search(self, vectors: Embedding, mode: str, limit: int, access_scope: str) -> list[Passage]:
+    def search(
+        self,
+        vectors: Embedding,
+        mode: str,
+        limit: int,
+        access_scope: str,
+        domain: str | None = None,
+    ) -> list[Passage]:
         filters = models.Filter(
             must=[
                 models.FieldCondition(
@@ -79,6 +86,13 @@ class QdrantStore:
                 )
             ]
         )
+        if domain:
+            filters = models.Filter(
+                must=[
+                    filters,
+                    models.FieldCondition(key="domain", match=models.MatchValue(value=domain)),
+                ]
+            )
         sparse = self._sparse(vectors)
         if mode in {"dense", "sparse"}:
             points = self.client.query_points(

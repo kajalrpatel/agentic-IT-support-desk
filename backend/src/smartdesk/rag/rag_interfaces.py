@@ -16,7 +16,12 @@ class KnowledgeStore(Protocol):
     def upsert(self, records: list[Chunk], vectors: list[Embedding], signature: str) -> None: ...
     def delete(self, chunk_ids: list[str]) -> None: ...
     def search(
-        self, vectors: Embedding, mode: str, limit: int, access_scope: str
+        self,
+        vectors: Embedding,
+        mode: str,
+        limit: int,
+        access_scope: str,
+        domain: str | None = None,
     ) -> list[Passage]: ...
 
 
@@ -25,7 +30,9 @@ class Reranker(Protocol):
 
 
 class Retriever(Protocol):
-    def search(self, query: str, mode: str = "reranked") -> list[Passage]: ...
+    def search(
+        self, query: str, mode: str = "reranked", domain: str | None = None
+    ) -> list[Passage]: ...
 
 
 class AnswerModel(Protocol):

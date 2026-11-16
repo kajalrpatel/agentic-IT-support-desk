@@ -4,11 +4,13 @@ from pathlib import Path
 from typing import Literal, TypeVar
 
 import structlog
+from langsmith.wrappers import wrap_openai
 from openai import APIError, OpenAI, omit
 from pydantic import BaseModel
 
 from smartdesk.config import Settings
 from smartdesk.domain.support_models import ServiceError
+from smartdesk.observability.langsmith_tracing import configure_langsmith
 from smartdesk.rag.rag_models import EvidenceVerdict, GroundedAnswer
 
 T = TypeVar("T", bound=BaseModel)
@@ -34,11 +36,14 @@ class ConversationSummary(BaseModel):
 class LanguageModel:
     def __init__(self, settings: Settings):
         self.settings = settings
+        configure_langsmith(settings)
         self.client = OpenAI(
             api_key=settings.openai_api_key.get_secret_value() or "not-configured",
             timeout=settings.request_timeout_seconds,
             max_retries=2,
         )
+        if settings.langsmith_tracing:
+            self.client = wrap_openai(self.client)
 
     def parse(self, prompt: str, data: dict, schema: type[T]) -> T:
         if not self.settings.openai_api_key.get_secret_value():
