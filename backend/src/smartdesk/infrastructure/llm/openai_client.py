@@ -99,7 +99,11 @@ class LanguageModel:
         return self.parse(self.prompt("router"), data, Route)
 
     def answer(self, data: dict) -> GroundedAnswer:
-        return self.parse(self.prompt("answer"), data, GroundedAnswer)
+        # Specialist instructions are supplied by server-side agent composition.
+        # Keep them separate from untrusted questions and retrieved passages.
+        instructions = data.get("specialist_instructions", "")
+        payload = {key: value for key, value in data.items() if key != "specialist_instructions"}
+        return self.parse(self.prompt("answer") + "\n" + instructions, payload, GroundedAnswer)
 
     def verify(self, data: dict) -> EvidenceVerdict:
         return self.parse(self.prompt("verify"), data, EvidenceVerdict)

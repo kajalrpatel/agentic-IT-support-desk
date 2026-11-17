@@ -143,5 +143,30 @@
                                                                       }
                                                                   ]
                                                     }
-                                   }
+                                   },
+    "short_issue_regression":  {
+                                   "date":  "2026-11-17T00:08:42.438829+00:00",
+                                   "model":  "gpt-4o-mini",
+                                   "passed":  3,
+                                   "total":  3,
+                                   "original_failure":  "Correct IT routing and top-ranked audio source; generator returned answerable=false",
+                                   "cases":  [
+                                                 {
+                                                     "query":  "Audio problems during an online meeting",
+                                                     "passed":  true,
+                                                     "expected_citation":  "it-meeting-audio:0"
+                                                 },
+                                                 {
+                                                     "query":  "My audio is not working in an online meeting. What should I check?",
+                                                     "passed":  true,
+                                                     "expected_citation":  "it-meeting-audio:0"
+                                                 },
+                                                 {
+                                                     "query":  "How much does NovaTech reimburse for dental implants?",
+                                                     "passed":  true,
+                                                     "expected_citation":  null
+                                                 }
+                                             ],
+                                   "limitation":  "Targeted live smoke checks, not full held-out answer evaluation"
+                               }
 }
