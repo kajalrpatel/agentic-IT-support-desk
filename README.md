@@ -91,7 +91,7 @@ After changing API schemas, run `uv run smartdesk export-openapi` in `backend/` 
 
 ## Evidence and remaining acceptance checks
 
-See [verification results](docs/verification.md) and [retrieval metrics](evaluations/reports/status.json). Local workflow tests use controlled providers. Real embedding/reranking models were evaluated against 40 development and 40 held-out cases. The authorized Jira create/read smoke test passed (SCRUM-5). OpenAI is configured with `gpt-4o-mini`, the mini model accessible to this project key. Live smoke-test results are recorded in the verification report; full held-out answer evaluation remains pending. AWS hosting, public authentication validation, load testing, and independently reviewed answer quality remain deployment gates.
+See [verification results](docs/verification.md) and [retrieval metrics](evaluations/reports/status.json). Local workflow tests use controlled providers. Real embedding/reranking models were evaluated against 40 development and 40 held-out cases. The authorized Jira create/read smoke test passed (SCRUM-5). The application and evaluation judge use `LLM_MODEL`; `gpt-4o-mini` is the example/default, not a fixed requirement. Historical reports record the model actually used. Live smoke-test results are recorded in the verification report; full held-out answer evaluation remains pending. AWS hosting, public authentication validation, load testing, and independently reviewed answer quality remain deployment gates.
 
 The corpus includes adapted HR source material and explicitly synthetic IT guidance; it is not a real employer's policy. The original HR dataset's scope is narrower than all HR questions. Unsupported topics should escalate. See [dataset provenance and gaps](docs/datasets.md).
 

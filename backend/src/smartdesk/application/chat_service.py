@@ -27,7 +27,13 @@ class ChatService:
         self.repo.owned(conversation, identity.user_id)
         request_id = str(payload.request_id)
         fingerprint = hashlib.sha256(payload.model_dump_json().encode()).hexdigest()
-        config = {"configurable": {"thread_id": conversation}, "recursion_limit": 20}
+        config = {
+            "configurable": {"thread_id": conversation},
+            "recursion_limit": 20,
+            "run_name": "smartdesk_conversation",
+            "tags": ["smartdesk", "conversation"],
+            "metadata": {"request_id": request_id},
+        }
         invocation: Command[Any] | dict[str, Any]
         with self.repo.lock(conversation):
             with self.repo.sessions.begin() as session:

@@ -26,7 +26,7 @@ def test_langsmith_feedback_uses_expected_document_labels():
 
 def test_uncited_answer_does_not_get_fabricated_judge_score():
     run = SimpleNamespace(outputs={"response": {"citations": []}, "retrieved_contexts": []})
-    assert build_answer_judge(None)(run, None) == {"results": []}
+    assert build_answer_judge(None, "configured-test-model")(run, None) == {"results": []}
     assert citation_coverage(run, None)["score"] == 0
 
 
@@ -43,6 +43,9 @@ def test_answer_judge_returns_validated_scores():
             "retrieved_contexts": ["Evidence"],
         }
     )
-    result = build_answer_judge(client)(run, SimpleNamespace(inputs={"query": "Question"}))
+    result = build_answer_judge(client, "configured-test-model")(
+        run, SimpleNamespace(inputs={"query": "Question"})
+    )
     assert [score["score"] for score in result["results"]] == [0.5, 1]
-    assert client.responses.parse.call_args.kwargs["model"] == "gpt-4o-mini"
+    assert client.responses.parse.call_args.kwargs["model"] == "configured-test-model"
+    assert "temperature" not in client.responses.parse.call_args.kwargs

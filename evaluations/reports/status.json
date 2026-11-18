@@ -110,8 +110,8 @@
                                                               "false_abstentions":  1,
                                                               "cited_answers":  1
                                                           },
-                                    "langsmith":  "Implemented; hosted verification pending configured workspace credentials",
-                                    "answer_evaluation":  "LangSmith custom evaluator implemented; local contract tests only, hosted judge run pending"
+                                    "langsmith":  "Hosted tracing and experiments verified; see langsmith_portal",
+                                    "answer_evaluation":  "Hosted LangSmith smoke verified: two recorded answers, one cited answer judged"
                                 },
     "retired_evaluation_results":  {
                                        "note":  "Historical results from removed integrations; not current LangSmith scores",
@@ -168,5 +168,66 @@
                                                  }
                                              ],
                                    "limitation":  "Targeted live smoke checks, not full held-out answer evaluation"
-                               }
+                               },
+    "langsmith_portal":  {
+                             "verified_date":  "2026-11-17",
+                             "tracing_project":  "smartdesk-development",
+                             "tracing_url":  "https://smith.langchain.com/o/fd136b26-326f-4c0e-99a8-8f71b3eedbe8/projects/p/62a7d0e8-82a2-4cf1-82d5-838981b55e09",
+                             "retrieval_dataset_url":  "https://smith.langchain.com/o/fd136b26-326f-4c0e-99a8-8f71b3eedbe8/datasets/42f5fbba-b354-4219-8fc4-7b0b64aeefee",
+                             "answer_dataset_url":  "https://smith.langchain.com/o/fd136b26-326f-4c0e-99a8-8f71b3eedbe8/datasets/a7887b68-1668-4128-96ba-d52ccf572391",
+                             "retrieval_experiments":  4,
+                             "answer_examples":  2,
+                             "judged_cited_answers":  1,
+                             "faithfulness":  1,
+                             "answer_relevance":  1,
+                             "trace_events_verified":  [
+                                                           "retrieval_completed",
+                                                           "evidence_verified",
+                                                           "rag_abstention"
+                                                       ],
+                             "live_chat_checks_passed":  2,
+                             "trace_payloads_hidden":  true,
+                             "limitation":  "Experiments replay recorded outputs; timings are replay overhead. One judged answer is not an overall quality benchmark."
+                         },
+    "laptop_return_routing":  {
+                                  "verified_date":  "2026-11-18",
+                                  "model":  "gpt-4o-mini",
+                                  "passed":  6,
+                                  "total":  6,
+                                  "backend_tests_passed":  73,
+                                  "cases":  [
+                                                {
+                                                    "query":  "i want to return my laptop",
+                                                    "passed":  true,
+                                                    "intent":  "knowledge"
+                                                },
+                                                {
+                                                    "query":  "yes, want to return mylaptop",
+                                                    "passed":  true,
+                                                    "intent":  "knowledge"
+                                                },
+                                                {
+                                                    "query":  "simplt return to company",
+                                                    "passed":  true,
+                                                    "intent":  "knowledge"
+                                                },
+                                                {
+                                                    "query":  "simply for returning it to the company",
+                                                    "passed":  true,
+                                                    "intent":  "knowledge"
+                                                },
+                                                {
+                                                    "query":  "Please create a ticket to arrange my laptop return",
+                                                    "passed":  true,
+                                                    "intent":  "ticket"
+                                                },
+                                                {
+                                                    "query":  "yes, please",
+                                                    "passed":  true,
+                                                    "intent":  "ticket"
+                                                }
+                                            ],
+                                  "jira_tickets_created":  0,
+                                  "limitation":  "Targeted routing and answer smoke checks, not full held-out evaluation"
+                              }
 }

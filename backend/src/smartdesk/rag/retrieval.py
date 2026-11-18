@@ -1,6 +1,7 @@
 import threading
 
 from smartdesk.domain.support_models import ServiceError
+from smartdesk.observability.trace_events import record_event
 from smartdesk.rag.rag_interfaces import Embedder, KnowledgeStore, Reranker
 from smartdesk.rag.rag_models import Passage
 
@@ -43,7 +44,11 @@ class RetrievalPipeline:
                 passages = self.reranker.rank(query, passages)
                 if self.min_score is not None:
                     passages = [p for p in passages if p.score >= self.min_score]
-            return passages[: self.context_limit]
+            selected = passages[: self.context_limit]
+            record_event(
+                "retrieval_completed", domain=domain, mode=mode, passage_count=len(selected)
+            )
+            return selected
         except Exception as exc:
             raise ServiceError(
                 "Knowledge search is unavailable. Please retry shortly; this does not mean the policy is missing."

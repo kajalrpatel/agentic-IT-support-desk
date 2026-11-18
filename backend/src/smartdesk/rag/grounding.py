@@ -1,7 +1,6 @@
 from dataclasses import asdict
 
-import structlog
-
+from smartdesk.observability.trace_events import record_event
 from smartdesk.rag.rag_interfaces import AnswerModel
 from smartdesk.rag.rag_models import AnswerResult, Citation, GroundedAnswer, Passage
 
@@ -15,16 +14,12 @@ class GroundingVerifier:
     ) -> AnswerResult | None:
         valid = {p.id: p for p in passages}
         if not answer.answerable or not answer.claims:
-            structlog.get_logger().info(
-                "rag_abstention", stage="generation", reason="no_supported_claims"
-            )
+            record_event("rag_abstention", stage="generation", reason="no_supported_claims")
             return None
         if any(
             not c.citation_ids or any(i not in valid for i in c.citation_ids) for c in answer.claims
         ):
-            structlog.get_logger().info(
-                "rag_abstention", stage="citation_validation", reason="invalid_citations"
-            )
+            record_event("rag_abstention", stage="citation_validation", reason="invalid_citations")
             return None
         verdict = self.model.verify(
             {
@@ -34,10 +29,9 @@ class GroundingVerifier:
             }
         )
         if not verdict.supported:
-            structlog.get_logger().info(
-                "rag_abstention", stage="verification", reason="unsupported_answer"
-            )
+            record_event("rag_abstention", stage="verification", reason="unsupported_answer")
             return None
+        record_event("evidence_verified", claims=len(answer.claims))
         used = list(dict.fromkeys(i for c in answer.claims for i in c.citation_ids))
         citations = [
             Citation(id=i, title=valid[i].title, excerpt=valid[i].text, source=valid[i].source)

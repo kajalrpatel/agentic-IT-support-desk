@@ -1,4 +1,4 @@
-"""Custom LangSmith answer evaluator using a bounded gpt-4o-mini judge."""
+"""Custom LangSmith answer evaluator using the configured language model."""
 
 import json
 
@@ -16,7 +16,7 @@ def citation_coverage(run, example):
     return {"key": "has_citations", "score": int(bool(run.outputs["response"]["citations"]))}
 
 
-def build_answer_judge(client):
+def build_answer_judge(client, model: str):
     def judge_grounded_answer(run, example):
         contexts = run.outputs.get("retrieved_contexts", [])
         if not contexts or not run.outputs["response"]["citations"]:
@@ -24,7 +24,7 @@ def build_answer_judge(client):
                 "results": []
             }  # Uncited answers remain visible but are not assigned judge scores.
         result = client.responses.parse(
-            model="gpt-4o-mini",
+            model=model,
             input=[
                 {
                     "role": "system",
@@ -43,7 +43,6 @@ def build_answer_judge(client):
             ],
             text_format=AnswerJudgment,
             max_output_tokens=800,
-            temperature=0,
             store=False,
         )
         if result.output_parsed is None:

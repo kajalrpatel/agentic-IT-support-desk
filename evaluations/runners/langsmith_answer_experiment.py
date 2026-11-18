@@ -18,7 +18,7 @@ def main():
     parser.add_argument(
         "--with-judge",
         action="store_true",
-        help="Paid gpt-4o-mini faithfulness and relevance scores for cited answers",
+        help="Paid faithfulness and relevance scores using LLM_MODEL for cited answers",
     )
     parser.add_argument("--limit", type=int, default=5)
     args = parser.parse_args()
@@ -65,7 +65,7 @@ def main():
     ) as judge:
         evaluators = [citation_coverage]
         if args.with_judge:
-            evaluators.append(build_answer_judge(judge))
+            evaluators.append(build_answer_judge(judge, settings.llm_model))
         results = client.evaluate(
             replay_recorded_answer,
             data=dataset.id,
@@ -76,7 +76,7 @@ def main():
                 "execution": "recorded-replay",
                 "total_answer_count": len(answers),
                 "selected_count": len(selected),
-                "judge_model": "gpt-4o-mini" if args.with_judge else None,
+                "judge_model": settings.llm_model if args.with_judge else None,
             },
         )
         print(results.experiment_name)

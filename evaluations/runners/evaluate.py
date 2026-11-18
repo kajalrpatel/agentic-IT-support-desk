@@ -57,6 +57,7 @@ def evaluate(args, settings, rag, stack):
             "dense": settings.embedding_model,
             "sparse": settings.sparse_model,
             "reranker": settings.reranker_model,
+            "language": settings.llm_model if args.with_answers else None,
         },
         "threshold": settings.reranker_min_score,
         "modes": {},

@@ -43,9 +43,17 @@ backend/src/smartdesk/
 
 Specialists cannot call Jira. Ticket operations still enforce identity, ownership, explicit confirmation, and duplicate prevention in `TicketService`. The workflow preserves pending drafts across specialist questions. Mixed IT/HR requests ask which part to address first; this implementation does not fan out to multiple specialists for one question.
 
+Procedural goals such as returning a laptop route to knowledge first. Clarification replies resolve the original topic rather than starting ticket preparation. `agents/ticket_intent.py` supplies a conservative English-language ticket-request gate: recognised explicit ticket requests and short acceptance of the immediately preceding standard escalation offer can enter preparation. A bare yes to a clarification cannot. This is a routing safeguard, not the authorization boundary; submitting a ticket still requires approval and service-level checks. Wording outside the recognised patterns may receive guidance instead of a draft.
+
 Domain filtering occurs inside both Qdrant search branches before candidate selection, together with access-scope filtering. It is not filtering only the final top five results. Shared RAG algorithms are implemented once.
 
 ## LangSmith
+
+### Model configuration
+
+`LLM_MODEL` selects the language model for supervisor routing, specialist answers, evidence verification, summaries, and the optional LangSmith answer judge. `gpt-4o-mini` is only the default/example configuration. Restart or recreate the backend after changing its environment. Evaluation commands read the configuration when started, and reports retain the model actually used for reproducibility.
+
+The current provider adapter uses OpenAI's structured Responses API. Changing `LLM_MODEL` selects a compatible model available to that API key; it does not automatically switch providers. A different provider needs a compatible adapter. Model-specific options such as `REASONING_EFFORT` must also match the chosen model. Embedding and reranking models have their own settings and are independent of `LLM_MODEL`.
 
 Set these locally in `.env` (never commit the key):
 
@@ -60,7 +68,13 @@ LANGSMITH_HIDE_OUTPUTS=true
 
 Use `https://eu.api.smith.langchain.com` for an EU workspace. Restart the backend after configuration. LangGraph emits nested workflow and specialist traces; the OpenAI wrapper traces model calls and the knowledge search capability emits tool spans. Payload hiding is enabled by default because application traces include employee conversations. To inspect synthetic evaluation inputs/outputs, explicitly disable hiding for that evaluation environment only.
 
-Open the configured project under LangSmith Tracing to inspect execution. Hosted verification requires a configured key. No hosted run or dashboard link is claimed until publishing succeeds.
+Open the configured project under LangSmith Tracing to inspect execution. Hosted tracing and experiment publishing were verified on 2026-11-17; direct links and sample counts are recorded in `evaluations/reports/status.json` under `langsmith_portal`.
+
+In Tracing, select `smartdesk-development` and open a `smartdesk_conversation` run. Expand the supervisor, IT/HR specialist, search tool, generation, and verification spans. The model spans show timing and usage. Search/verification spans include diagnostic events such as `retrieval_completed`, `evidence_verified`, and `rag_abstention` with a stage/reason. These events contain categories and counts, not employee messages. General HTTP/startup logs remain in Docker logs; LangSmith is not a mirror of every console log.
+
+In Datasets & Experiments, open a published dataset to compare the four retrieval runs or inspect answer-evaluator feedback. Recorded experiments measure replay execution time; their `recorded_latency_ms` output is the original retrieval latency. Answer judging applies only to cited answers; uncited cases remain visible with citation coverage zero.
+
+When `LANGSMITH_HIDE_INPUTS` and `LANGSMITH_HIDE_OUTPUTS` are true, trace payloads are hidden while execution structure and diagnostics remain available. For a local demo containing only synthetic data, set both to false and recreate the backend container to inspect full prompts and answers. Changing this setting affects future traces.
 
 ## Reproducible evaluation commands
 
@@ -81,7 +95,7 @@ uv run python ../evaluations/runners/evaluate.py --local --split held_out --with
 uv run python ../evaluations/runners/langsmith_answer_experiment.py ../evaluations/reports/answers.json --dataset-name smartdesk-answers-v1 --limit 5 --with-judge
 ```
 
-LangSmith is the only evaluation framework. `answer_evaluators.py` contains custom citation-coverage and LLM-judge evaluators. The judge uses `gpt-4o-mini` with bounded output, no automatic retries, and one call per cited answer. It uses full retrieved contexts in new reports, falling back to cited excerpts for legacy reports. Scores are published directly to LangSmith. The new evaluator has local contract tests; hosted evaluation remains unverified until a configured run succeeds.
+LangSmith is the only evaluation framework. `answer_evaluators.py` contains custom citation-coverage and LLM-judge evaluators. The judge uses the model selected by `LLM_MODEL` with bounded output, no automatic retries, and one call per cited answer. It uses full retrieved contexts in new reports, falling back to cited excerpts for legacy reports. Scores are published directly to LangSmith. Hosted smoke evaluation was verified on two recorded answer examples, only one of which was cited and judged; this is not an overall quality benchmark.
 
 To publish answers and citation coverage without paid judge calls:
 
@@ -99,6 +113,6 @@ These cases are assistant-authored, not an independent human-labeled benchmark. 
 
 Only completed evaluations produce evidence. Backend tests use provider doubles; they verify boundaries and workflows rather than live answer accuracy.
 
-On 2026-11-16, a two-question live HR smoke run produced one cited answer and one false abstention. This remains recorded in `evaluations/reports/status.json`. Earlier judge reports are historical artifacts from retired integrations, not LangSmith evaluation results. LangSmith hosted publishing remains pending workspace credentials.
+On 2026-11-16, a two-question live HR smoke run produced one cited answer and one false abstention. This remains recorded in `evaluations/reports/status.json`. Earlier judge reports are historical artifacts from retired integrations, not LangSmith evaluation results. The recorded answer report was separately evaluated in LangSmith on 2026-11-17; do not interpret that replay as a fresh application run.
 
 Framework reference: [LangSmith SDK](https://reference.langchain.com/python/langsmith).
