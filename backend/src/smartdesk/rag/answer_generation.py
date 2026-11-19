@@ -9,11 +9,16 @@ class AnswerGenerator:
         self.model = model
 
     def generate(
-        self, question: str, passages: list[Passage], instructions: str = ""
+        self,
+        question: str,
+        passages: list[Passage],
+        instructions: str = "",
+        employee_message: str = "",
     ) -> GroundedAnswer:
         return self.model.answer(
             {
                 "question": question,
+                "employee_message": employee_message or question,
                 "passages": [asdict(p) for p in passages],
                 "specialist_instructions": instructions,
             }

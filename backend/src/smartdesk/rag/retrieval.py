@@ -30,7 +30,9 @@ class RetrievalPipeline:
         if mode not in {"dense", "sparse", "hybrid", "reranked"}:
             raise ValueError("Unknown retrieval mode")
         if not self._slots.acquire(timeout=10):
-            raise ServiceError("Knowledge search is busy. Please retry shortly.")
+            raise ServiceError(
+                "Sorry, I'm having trouble checking that right now. Please try again shortly."
+            )
         try:
             vectors = self.embedder.embed_query(query)
             passages = self.store.search(
@@ -51,7 +53,7 @@ class RetrievalPipeline:
             return selected
         except Exception as exc:
             raise ServiceError(
-                "Knowledge search is unavailable. Please retry shortly; this does not mean the policy is missing."
+                "Sorry, I can't check that information right now. Please try again shortly."
             ) from exc
         finally:
             self._slots.release()

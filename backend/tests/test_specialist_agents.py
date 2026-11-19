@@ -10,10 +10,12 @@ def test_supervisor_hands_off_to_scoped_specialist(system, domain):
     original = system.model.route
     system.model.route = lambda data: original(data).model_copy(update={"category": domain})
     instructions = []
+    employee_messages = []
     answer = system.model.answer
 
     def capture(data):
         instructions.append(data["specialist_instructions"])
+        employee_messages.append(data["employee_message"])
         return answer(data)
 
     system.model.answer = capture
@@ -25,6 +27,7 @@ def test_supervisor_hands_off_to_scoped_specialist(system, domain):
     assert response.citations
     assert system.retriever.last_domain == domain
     assert domain in instructions[0]
+    assert employee_messages == ["Explain the policy"]
     assert not system.provider.created
 
 

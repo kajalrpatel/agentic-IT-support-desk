@@ -14,7 +14,7 @@ def run_agent_case(model, pipeline, case):
         agent = (build_hr_policy_agent if decision["category"] == "HR" else build_it_support_agent)(
             pipeline
         )
-        result = agent.invoke({"route": decision})
+        result = agent.invoke({"route": decision, "text": case["query"]})
     return {
         "id": case["id"],
         "query": case["query"],

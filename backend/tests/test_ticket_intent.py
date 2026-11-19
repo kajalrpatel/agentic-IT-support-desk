@@ -40,6 +40,11 @@ def test_yes_only_accepts_an_actual_escalation_offer():
     assert not ticket_preparation_requested("yes please", {"text": "Is it a company laptop?"})
 
 
+def test_acceptance_survives_escalation_copy_change():
+    previous = "I don't have enough information in the knowledge base to answer that reliably. Would you like me to prepare a support ticket?"
+    assert ticket_preparation_requested("yes please", {"text": previous})
+
+
 def test_supervisor_blocks_model_ticket_route_without_request(system):
     from smartdesk.agents.supervisor_agent import build_supervisor_nodes
 

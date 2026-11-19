@@ -3,7 +3,7 @@ from smartdesk.rag.grounding import GroundingVerifier
 from smartdesk.rag.rag_interfaces import AnswerModel, Retriever
 from smartdesk.rag.rag_models import AnswerResult
 
-ESCALATE = "I don't have enough information in the knowledge base to answer that reliably. Would you like me to prepare a support ticket?"
+ESCALATE = "I don't have enough information to answer that reliably. Would you like me to prepare a support ticket so the team can help?"
 
 
 class QueryPipeline:

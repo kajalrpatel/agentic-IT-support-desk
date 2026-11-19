@@ -56,7 +56,7 @@ def build_ticket_nodes(tickets: TicketService):
             }
         return {
             "response": ChatResponse(
-                text=f"Ticket {ticket.id} has been created. You can track it using the link below.",
+                text=f"Done! Ticket {ticket.id} has been created. You can use the link below or ask me for an update anytime.",
                 tickets=[TicketView.model_validate(asdict(ticket))],
             ).model_dump(),
             "draft": None,
@@ -76,9 +76,9 @@ def build_ticket_nodes(tickets: TicketService):
         text = (
             "No tickets were found for your account."
             if not found
-            else "Here are your tickets. Choose one for details."
+            else "Here are your tickets. Please choose one and I'll help you check the details."
             if len(found) > 1
-            else f"{found[0].id} is {found[0].status}."
+            else f"Here's the latest update: {found[0].id} is {found[0].status}."
         )
         return {
             "response": ChatResponse(

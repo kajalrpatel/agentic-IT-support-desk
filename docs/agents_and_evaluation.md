@@ -19,6 +19,10 @@ flowchart TD
 
 ## Code boundaries
 
+`conversation_prompts/response_style.txt` provides shared employee-facing tone rules for routing replies and grounded answers, following PROJECT.md section 4.1 and the sample conversations. It calls for polite, professional, empathetic language, natural greetings/closings, reuse of known details, and no internal retrieval terminology. Courtesy does not relax evidence checks or permit invented contacts, deadlines, or promises. Escalation and service-outage messages use plain language; old persisted escalation offers remain recognisable when accepted.
+
+The original employee message is passed alongside the standalone query so greetings survive query rewriting. `agents/response_presentation.py` adds a brief conversational opening after evidence verification, separate from cited claims; it adds no policy facts or promises. Greeting, closing, and unsupported-question behavior received targeted live checks. These checks are not a comprehensive tone evaluation.
+
 ```text
 backend/src/smartdesk/
   agents/

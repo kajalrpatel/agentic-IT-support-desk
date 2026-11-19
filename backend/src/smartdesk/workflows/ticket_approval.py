@@ -11,7 +11,7 @@ def build_approval_nodes():
         value = Draft.model_validate(state["draft"])
         return {
             "response": ChatResponse(
-                text="Please review this ticket. You can edit it, confirm submission, or cancel.",
+                text="Here's your ticket summary. Please review the details. Shall I go ahead and create it? You can also edit or cancel.",
                 draft=value,
                 draft_version=state["draft_version"],
                 pending_approval=True,

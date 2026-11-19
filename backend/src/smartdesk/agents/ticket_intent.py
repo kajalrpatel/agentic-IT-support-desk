@@ -7,11 +7,15 @@ from smartdesk.rag.query_pipeline import ESCALATE
 _TICKET = r"(?:ticket|support request|support case|incident)"
 _ACTION = r"(?:create|open|raise|file|submit|prepare|log)"
 
+# Recognise an offer already persisted before the employee-facing wording changed.
+# This text is never used to produce a new response.
+_PREVIOUS_ESCALATION_TEXT = "I don't have enough information in the knowledge base to answer that reliably. Would you like me to prepare a support ticket?"
+
 
 def ticket_preparation_requested(message: str, previous_response: dict | None) -> bool:
     text = " ".join(message.lower().replace(",", "").split()).strip(" .!?,")
     # A yes to a clarification is not acceptance of a ticket offer.
-    if previous_response and previous_response.get("text") == ESCALATE:
+    if previous_response and previous_response.get("text") in {ESCALATE, _PREVIOUS_ESCALATION_TEXT}:
         if text in {"yes", "yes please", "please do", "go ahead", "ok", "okay", "sure"}:
             return True
     if re.search(rf"\b(?:do not|don't|dont|never)\s+(?:\w+\s+){{0,2}}{_ACTION}\b", text):

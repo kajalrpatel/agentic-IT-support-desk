@@ -48,9 +48,9 @@ def build_supervisor_nodes(model: LanguageModel):
 
     def reply_to_nonknowledge_request(state: ChatState):
         fallback = (
-            "Which issue or policy are you referring to?"
+            "Could you please tell me which issue or policy you mean?"
             if state["route"]["intent"] == "clarify"
-            else "I can help with employee IT and HR questions. What do you need help with?"
+            else "Hello! I can help with IT support and HR questions. How can I help you today?"
         )
         return {"response": ChatResponse(text=state["route"]["reply"] or fallback).model_dump()}
 

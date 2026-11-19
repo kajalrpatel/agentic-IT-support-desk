@@ -5,12 +5,14 @@ from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
+from smartdesk.agents.response_presentation import present_verified_answer
 from smartdesk.rag.query_pipeline import ESCALATE, QueryPipeline
 from smartdesk.rag.rag_models import AnswerResult, GroundedAnswer, Passage
 from smartdesk.tools.knowledge_search import KnowledgeSearchTool
 
 
 class SpecialistState(TypedDict, total=False):
+    text: str
     route: dict
     passages: list[Passage]
     candidate: GroundedAnswer
@@ -27,7 +29,10 @@ def build_specialist_graph(pipeline: QueryPipeline, domain: str, prompt_file: st
     def generate_grounded_answer(state: SpecialistState):
         return {
             "candidate": pipeline.generator.generate(
-                state["route"]["standalone_query"], state["passages"], instructions
+                state["route"]["standalone_query"],
+                state["passages"],
+                instructions,
+                employee_message=state.get("text", state["route"]["standalone_query"]),
             )
         }
 
@@ -35,6 +40,14 @@ def build_specialist_graph(pipeline: QueryPipeline, domain: str, prompt_file: st
         result = pipeline.grounding.verify(
             state["route"]["standalone_query"], state["passages"], state["candidate"]
         )
+        if result is not None:
+            result = result.model_copy(
+                update={
+                    "text": present_verified_answer(
+                        result.text, state.get("text", state["route"]["standalone_query"])
+                    )
+                }
+            )
         return {"response": (result or AnswerResult(text=ESCALATE)).model_dump()}
 
     def offer_escalation(state: SpecialistState):
