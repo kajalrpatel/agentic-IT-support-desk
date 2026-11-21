@@ -64,7 +64,6 @@
 {"id": "it-support-priority", "query": "How should I describe urgency when opening a support request?", "expected_documents": ["it-support-priority"], "answerable": true, "split": "held_out"}
 {"id": "unknown-00", "query": "Where do I park my car at the office?", "expected_documents": [], "answerable": false, "split": "development"}
 {"id": "unknown-01", "query": "My monitor flickers; which hardware component should I replace?", "expected_documents": [], "answerable": false, "split": "development"}
-{"id": "unknown-02", "query": "How many paid sick days do I get each year?", "expected_documents": [], "answerable": false, "split": "development"}
 {"id": "unknown-03", "query": "On which day is my salary paid?", "expected_documents": [], "answerable": false, "split": "development"}
 {"id": "unknown-04", "query": "What is the reimbursement limit for business meals?", "expected_documents": [], "answerable": false, "split": "development"}
 {"id": "unknown-05", "query": "How long is my probation period?", "expected_documents": [], "answerable": false, "split": "development"}
@@ -72,9 +71,16 @@
 {"id": "unknown-07", "query": "Does our insurance cover dental surgery?", "expected_documents": [], "answerable": false, "split": "development"}
 {"id": "unknown-08", "query": "Which office parking spaces are reserved for motorcycles?", "expected_documents": [], "answerable": false, "split": "held_out"}
 {"id": "unknown-09", "query": "What cable fixes a flickering monitor?", "expected_documents": [], "answerable": false, "split": "held_out"}
-{"id": "unknown-10", "query": "How many vacation days are allocated annually?", "expected_documents": [], "answerable": false, "split": "held_out"}
 {"id": "unknown-11", "query": "What is my salary breakdown?", "expected_documents": [], "answerable": false, "split": "held_out"}
-{"id": "unknown-12", "query": "What is our maternity leave entitlement?", "expected_documents": [], "answerable": false, "split": "held_out"}
 {"id": "unknown-13", "query": "What is the annual performance bonus percentage?", "expected_documents": [], "answerable": false, "split": "held_out"}
 {"id": "unknown-14", "query": "Can you tell me the CEO's personal phone number?", "expected_documents": [], "answerable": false, "split": "held_out"}
 {"id": "unknown-15", "query": "What is our office pet policy?", "expected_documents": [], "answerable": false, "split": "held_out"}
+{"id": "leave-sick-entitlement", "replaces_id": "unknown-02", "query": "How many paid sick days do I get each year?", "expected_documents": ["hr-leave-policy"], "answerable": true, "split": "development", "reference_answer": "8 paid working days per calendar year, prorated for a partial year."}
+{"id": "leave-vacation-entitlement", "replaces_id": "unknown-10", "query": "How many vacation days are allocated annually?", "expected_documents": ["hr-leave-policy"], "answerable": true, "split": "held_out", "reference_answer": "15 paid working days of earned/vacation leave per full year, accruing at 1.25 days per completed month."}
+{"id": "leave-maternity-entitlement", "replaces_id": "unknown-12", "query": "What is our maternity leave entitlement?", "expected_documents": ["hr-leave-policy"], "answerable": true, "split": "held_out", "reference_answer": "26 paid consecutive calendar weeks per childbirth."}
+{"id": "leave-casual-entitlement", "query": "How many casual leave days do I get?", "expected_documents": ["hr-leave-policy"], "answerable": true, "split": "development", "reference_answer": "12 paid working days per calendar year, prorated for a partial year."}
+{"id": "leave-paternity-entitlement", "query": "How long is paternity leave?", "expected_documents": ["hr-leave-policy"], "answerable": true, "split": "held_out", "reference_answer": "2 paid consecutive calendar weeks per childbirth, starting within 90 calendar days of birth."}
+{"id": "leave-earned-carry-forward", "query": "How many unused earned leave days can I carry into next year?", "expected_documents": ["hr-leave-policy"], "answerable": true, "split": "development", "reference_answer": "Up to 30 unused earned leave days at year-end; exceptions require HR review."}
+{"id": "leave-sick-encashment", "query": "Can I get paid for unused sick leave?", "expected_documents": ["hr-leave-policy"], "answerable": true, "split": "held_out", "reference_answer": "No. Sick leave cannot be encashed."}
+{"id": "leave-personal-balance-unavailable", "query": "How many vacation days do I personally have remaining today?", "expected_documents": [], "answerable": false, "split": "development", "reference_answer": "Cannot determine a personal balance without authorized HR records; refer to the leave system or HR."}
+{"id": "leave-personal-approval-unavailable", "query": "Has my manager approved my vacation request for next Friday?", "expected_documents": [], "answerable": false, "split": "held_out", "reference_answer": "Cannot determine an individual request's approval status without authorized leave records."}

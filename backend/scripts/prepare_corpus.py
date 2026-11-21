@@ -7,6 +7,41 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 KB = ROOT / "knowledge_base"
+# Stable dataset IDs retain provenance; filenames describe the policy for readers.
+HR_FILENAMES = {
+    "hr-000": "hr-policy-review-and-updates",
+    "hr-001": "hr-policy-change-notifications",
+    "hr-006": "hr-policy-feedback",
+    "hr-021": "hr-compensatory-off-usage-window",
+    "hr-022": "hr-compensatory-off-carry-forward",
+    "hr-023": "hr-compensatory-off-encashment",
+    "hr-024": "hr-compensatory-off-approvers",
+    "hr-028": "hr-compensatory-off-leadership-eligibility",
+    "hr-029": "hr-compensatory-off-exceptions",
+    "hr-040": "hr-overtime-prior-approval",
+    "hr-042": "hr-compensatory-off-approval-process",
+    "hr-044": "hr-compensatory-off-request-details",
+    "hr-048": "hr-compensatory-off-system-approval",
+    "hr-136": "hr-compensatory-off-combining-leave",
+    "hr-364": "hr-planned-and-unplanned-leave-notification",
+    "hr-367": "hr-extended-leave-out-of-office",
+    "hr-371": "hr-remote-work-availability-and-leave-reporting",
+    "hr-372": "hr-remote-work-workspace-and-data-security",
+    "hr-375": "hr-medical-emergency-leave-notification",
+    "hr-384": "hr-remote-work-missed-meetings",
+    "hr-399": "hr-remote-work-performance-monitoring",
+    "hr-401": "hr-remote-work-performance-feedback",
+    "hr-405": "hr-remote-work-privilege-revocation",
+    "hr-413": "hr-remote-work-policy-review",
+    "hr-420": "hr-remote-work-policy-acknowledgment",
+    "hr-602": "hr-confidentiality-obligations",
+    "hr-603": "hr-confidential-information-internal-sharing",
+    "hr-604": "hr-confidential-information-types",
+    "hr-606": "hr-confidentiality-clarification",
+    "hr-609": "hr-company-assets-usage",
+    "hr-623": "hr-code-of-conduct-violation-reporting",
+    "hr-629": "hr-code-of-conduct-non-retaliation",
+}
 HR_IDS = [
     0,
     1,
@@ -286,7 +321,8 @@ def write_document(identifier, title, domain, source, body, synthetic):
         "synthetic": synthetic,
         "review_status": "reviewed-fictional",
     }
-    path = KB / domain.lower() / f"{identifier}.md"
+    filename = HR_FILENAMES[identifier] if domain == "HR" else identifier
+    path = KB / domain.lower() / f"{filename}.md"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         "---\n"
@@ -373,6 +409,15 @@ def main():
                 "split": "development" if number < 8 else "held_out",
             }
         )
+    supplements = [
+        json.loads(line)
+        for line in (ROOT / "evaluations/datasets/leave_policy.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+        if line.strip()
+    ]
+    replaced = {case["replaces_id"] for case in supplements if "replaces_id" in case}
+    cases = [case for case in cases if case["id"] not in replaced] + supplements
     evaluation_path = ROOT / "evaluations/datasets/knowledge.jsonl"
     evaluation_path.parent.mkdir(parents=True, exist_ok=True)
     evaluation_path.write_text("".join(json.dumps(c) + "\n" for c in cases), encoding="utf-8")
@@ -391,8 +436,11 @@ def main():
             "prompt_version": "option-c-v1",
             "review": "Reviewed as vendor-neutral fictional company procedures; no product-specific command sequences included",
         },
-        "document_count": len(HR_IDS) + len(IT),
-        "known_gaps": unknown,
+        "synthetic_hr_documents": ["hr-leave-policy"],
+        "synthetic_hr_review": "Assistant-drafted fictional leave policy approved for indexing by the user on 2026-11-21; not an upstream dataset policy or legal advice",
+        "document_count": len(HR_IDS) + len(IT) + 1,
+        "evaluation_version": "2026-11-21-leave-policy-v1",
+        "known_gaps": [case["query"] for case in cases if not case["answerable"]],
     }
     (KB / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(

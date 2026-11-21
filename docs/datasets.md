@@ -4,7 +4,7 @@ HR comes from `strova-ai/hr-policies-qa-dataset`, revision `83682448cb8afe6a6123
 
 Source: https://huggingface.co/datasets/strova-ai/hr-policies-qa-dataset
 
-The actual source is concentrated on conduct, confidentiality, remote work, and compensatory leave. It does not establish a comprehensive sick-leave entitlement, payroll schedule, or reimbursement policy. Those questions are deliberately treated as unsupported. Review the license and upstream notices when distributing the corpus; a local copy of the source README is downloaded by the import script.
+The upstream source is concentrated on conduct, confidentiality, remote work, and compensatory leave. The additional assistant-drafted [Employee Leave Policy](../knowledge_base/hr/hr-leave-policy.md), approved for this fictional demo on 2026-11-21, establishes casual, sick, earned/vacation, maternity, paternity, and compensatory leave rules. These rules are synthetic company policy, not facts supplied by the upstream dataset or statements of applicable law. Payroll schedules, reimbursement limits, personal leave balances, and individual approval status remain unsupported. Review the license and upstream notices when distributing the corpus; a local copy of the source README is downloaded by the import script.
 
 The 32 IT documents are assistant-generated, vendor-neutral procedures for the fictional NovaTech organization. They define company-specific processes explicitly, avoid invented real company URLs, and do not prescribe unverified product commands. Their metadata labels them synthetic and reviewed-fictional. The generation model's exact serving revision was not captured and is not invented in the manifest.
 
@@ -15,4 +15,4 @@ uv run python scripts/import_hr.py --revision 83682448cb8afe6a6123583e722ecdf04f
 uv run python scripts/prepare_corpus.py
 ```
 
-The Console-AI ticket dataset is not used. The selected strategy is PROJECT.md Option C.
+The corpus now contains 65 documents: 32 curated HR documents, one approved synthetic HR leave policy, and 32 synthetic IT guides. The corpus preparation script preserves the separately authored leave policy and merges `evaluations/datasets/leave_policy.jsonl` into the evaluation dataset, replacing the three obsolete unsupported entitlement labels. Questions are never indexed. The Console-AI ticket dataset is not used. The selected strategy is PROJECT.md Option C.

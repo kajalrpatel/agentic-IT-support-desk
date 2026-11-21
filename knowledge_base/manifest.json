@@ -54,11 +54,15 @@
       "prompt_version": "option-c-v1",
       "review": "Reviewed as vendor-neutral fictional company procedures; no product-specific command sequences included"
     },
-    "document_count": 64,
+    "synthetic_hr_documents": [
+      "hr-leave-policy"
+    ],
+    "synthetic_hr_review": "Assistant-drafted fictional leave policy approved for indexing by the user on 2026-11-21; not an upstream dataset policy or legal advice",
+    "document_count": 65,
+    "evaluation_version": "2026-11-21-leave-policy-v1",
     "known_gaps": [
       "Where do I park my car at the office?",
       "My monitor flickers; which hardware component should I replace?",
-      "How many paid sick days do I get each year?",
       "On which day is my salary paid?",
       "What is the reimbursement limit for business meals?",
       "How long is my probation period?",
@@ -66,12 +70,12 @@
       "Does our insurance cover dental surgery?",
       "Which office parking spaces are reserved for motorcycles?",
       "What cable fixes a flickering monitor?",
-      "How many vacation days are allocated annually?",
       "What is my salary breakdown?",
-      "What is our maternity leave entitlement?",
       "What is the annual performance bonus percentage?",
       "Can you tell me the CEO's personal phone number?",
-      "What is our office pet policy?"
+      "What is our office pet policy?",
+      "How many vacation days do I personally have remaining today?",
+      "Has my manager approved my vacation request for next Friday?"
     ]
   }
 }
