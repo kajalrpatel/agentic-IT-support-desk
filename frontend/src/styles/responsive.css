@@ -1,0 +1,185 @@
+@media (min-height: 900px) {
+  .welcome {
+    margin-top: 90px;
+  }
+}
+@media (max-width: 1050px) {
+  .sidebar {
+    width: 220px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  main {
+    margin-left: 220px;
+  }
+  .chat-area {
+    padding: 20px;
+  }
+  .topbar {
+    padding: 0 25px;
+  }
+  .welcome {
+    margin-top: 30px;
+  }
+  h1 {
+    font-size: 42px;
+  }
+  .suggestions {
+    gap: 8px;
+  }
+  .suggestions button {
+    padding: 16px 11px;
+  }
+  .composer-wrap {
+    padding: 15px 25px 20px;
+  }
+}
+@media (max-width: 700px) {
+  .sidebar {
+    width: 66px;
+    padding: 22px 10px;
+  }
+  .brand > span:last-child,
+  .new-chat,
+  .nav-label,
+  .nav-current,
+  .history,
+  .sidebar-note,
+  .profile {
+    display: none;
+  }
+  .brand-mark {
+    width: 44px;
+  }
+  .sidebar:after {
+    content: "SD";
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-align: center;
+    color: #849178;
+    margin-top: 18px;
+  }
+  main {
+    margin-left: 66px;
+  }
+  .topbar {
+    height: 60px;
+    padding: 0 17px;
+  }
+  .private-label {
+    display: none;
+  }
+  .topbar > div {
+    gap: 9px;
+    font-size: 10px;
+  }
+  .chat-area {
+    padding: 14px;
+  }
+  .welcome {
+    margin: 28px auto 10px;
+  }
+  .welcome-icon {
+    width: 54px;
+    height: 54px;
+    margin-bottom: 22px;
+  }
+  .eyebrow {
+    font-size: 8px;
+    letter-spacing: 1.4px;
+  }
+  h1 {
+    font-size: 35px;
+    letter-spacing: -1.6px;
+  }
+  .welcome > p {
+    font-size: 12px;
+  }
+  .desktop-break {
+    display: none;
+  }
+  .suggestions {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 23px;
+  }
+  .suggestions button {
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    column-gap: 9px;
+  }
+  .suggestions button > svg {
+    grid-row: span 2;
+    margin: 4px 0 0;
+    width: 20px;
+  }
+  .suggestions button > span {
+    margin-top: 3px;
+  }
+  .welcome-foot {
+    font-size: 8px;
+    line-height: 1.6;
+  }
+  .composer-wrap {
+    padding: 10px 12px 15px;
+  }
+  .composer {
+    padding: 9px 10px;
+  }
+  .composer textarea {
+    font-size: 11px;
+  }
+  .composer-wrap > p {
+    font-size: 8px;
+  }
+  .ticket-preview {
+    margin-left: 0;
+    padding: 16px;
+  }
+  .message {
+    gap: 9px;
+  }
+  .message-body > p {
+    font-size: 13px;
+  }
+  .message-label span {
+    display: none;
+  }
+  .error {
+    flex-wrap: wrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.mobile-navigation {
+  display: none;
+}
+@media (max-width: 700px) {
+  .mobile-navigation {
+    display: flex;
+    gap: 8px;
+    padding: 8px 16px;
+  }
+  .mobile-navigation button,
+  .mobile-navigation select {
+    min-width: 0;
+    max-width: 50%;
+    padding: 8px;
+    border: 1px solid #dbe4df;
+    border-radius: 8px;
+    background: white;
+    color: #244f43;
+  }
+  .mobile-navigation button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}

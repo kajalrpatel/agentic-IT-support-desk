@@ -49,3 +49,24 @@ test('mobile welcome fits the viewport', async ({ page }) => {
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
   await page.screenshot({ path: 'test-results/mobile-welcome.png', fullPage: true });
 });
+
+
+test('discarding ticket edits restores the approved draft', async ({ page }) => {
+  await page.getByRole('textbox', { name: 'Message' }).fill('Create a ticket');
+  await page.getByRole('button', { name: 'Send message' }).click();
+  const preview = page.getByRole('region', { name: 'Ticket preview' });
+  const summary = await preview.getByRole('heading').innerText();
+  await preview.getByRole('button', { name: 'Edit', exact: true }).click();
+  await page.getByLabel('Summary', { exact: true }).fill('Unsaved replacement summary');
+  await page.getByRole('button', { name: 'Discard edits' }).click();
+  await expect(preview.getByRole('heading')).toHaveText(summary);
+  await preview.getByRole('button', { name: 'Edit', exact: true }).click();
+  await expect(page.getByLabel('Summary', { exact: true })).toHaveValue(summary);
+});
+
+test('a stale saved conversation does not prevent starting a new chat', async ({ page }) => {
+  await page.evaluate(() => localStorage.setItem('smartdesk-conversation', 'missing-conversation'));
+  await page.reload();
+  await expect(page.getByRole('textbox', { name: 'Message' })).toBeEnabled();
+  await expect(page.getByRole('alert')).toHaveCount(0);
+});
