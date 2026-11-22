@@ -55,15 +55,21 @@
       "review": "Reviewed as vendor-neutral fictional company procedures; no product-specific command sequences included"
     },
     "synthetic_hr_documents": [
-      "hr-leave-policy"
+      "hr-expense-reimbursement",
+      "hr-harassment-reporting",
+      "hr-leave-policy",
+      "hr-onboarding-benefits",
+      "hr-onboarding-buddy",
+      "hr-payroll-calendar",
+      "hr-payroll-tax-declarations",
+      "hr-performance-review"
     ],
-    "synthetic_hr_review": "Assistant-drafted fictional leave policy approved for indexing by the user on 2026-11-21; not an upstream dataset policy or legal advice",
-    "document_count": 65,
-    "evaluation_version": "2026-11-21-leave-policy-v1",
+    "synthetic_hr_review": "Assistant-authored fictional handbook content for the NovaTech project. The user approved indexing the leave policy on 2026-11-21 and requested wider topic coverage on 2026-11-22.",
+    "document_count": 72,
+    "evaluation_version": "2026-11-22-handbook-v2",
     "known_gaps": [
       "Where do I park my car at the office?",
       "My monitor flickers; which hardware component should I replace?",
-      "On which day is my salary paid?",
       "What is the reimbursement limit for business meals?",
       "How long is my probation period?",
       "What percentage of stock vests in the first year?",

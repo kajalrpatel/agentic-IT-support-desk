@@ -106,6 +106,9 @@ class FakeTickets:
             raise ServiceError("Jira is temporarily unreachable.")
         return [t for t, correlation, employee in self.created if label in {correlation, employee}]
 
+    def find_owned(self, email, label):
+        return self.find(label)
+
     def get(self, ticket_id):
         return replace(
             next(t for t, _, _ in self.created if t.id == ticket_id),

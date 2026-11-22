@@ -16,7 +16,17 @@ def ticket_preparation_requested(message: str, previous_response: dict | None) -
     text = " ".join(message.lower().replace(",", "").split()).strip(" .!?,")
     # A yes to a clarification is not acceptance of a ticket offer.
     if previous_response and previous_response.get("text") in {ESCALATE, _PREVIOUS_ESCALATION_TEXT}:
-        if text in {"yes", "yes please", "please do", "go ahead", "ok", "okay", "sure"}:
+        # Ignore an optional contact address only for this consent check. Ticket ownership
+        # always comes from the authenticated identity.
+        consent = re.sub(
+            r"\s+(?:(?:my )?email(?: address)? is\s+)?[^\s@]+@[^\s@]+\.[^\s@]+$", "", text
+        )
+        if re.fullmatch(
+            r"(?:(?:yes|yeah|yep|sure|ok(?:ay)?|absolutely)(?: please)?"
+            r"(?: (?:please )?(?:do(?: (?:it|that|so))?|go ahead))?|"
+            r"(?:please )?(?:go ahead|do (?:it|that|so))|please do)",
+            consent,
+        ):
             return True
     if re.search(rf"\b(?:do not|don't|dont|never)\s+(?:\w+\s+){{0,2}}{_ACTION}\b", text):
         return False

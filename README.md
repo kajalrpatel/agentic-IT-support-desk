@@ -35,7 +35,7 @@ backend/
     infrastructure/      Shared identity, PostgreSQL, OpenAI, and Jira adapters
     rag/                 Complete ingestion, retrieval, and grounded-answer feature
       document_loader.py Reviewed Markdown loading
-      chunking.py        Paragraph chunking and stable content hashes
+      chunking.py        Section-aware chunking and stable content hashes
       embedding.py       Local dense and sparse embeddings
       qdrant_store.py    Database operations and native hybrid fusion
       reranking.py       Local cross-encoder scoring
@@ -58,8 +58,8 @@ frontend/
   nginx.conf.template    Runtime API proxy configuration
   docker-entrypoint.d/   Public frontend runtime configuration
 contracts/               Generated OpenAPI schema
-knowledge_base/          32 HR and 32 synthetic IT documents, provenance
-evaluations/             80 labeled cases, runners, measured results
+knowledge_base/          40 HR and 32 synthetic IT documents, provenance
+evaluations/             92 labeled cases, runners, measured results
 tests/e2e/               Browser journeys
 docs/                    Architecture, operations, datasets, demo
 ```
@@ -91,7 +91,7 @@ After changing API schemas, run `uv run smartdesk export-openapi` in `backend/` 
 
 ## Evidence and remaining acceptance checks
 
-See [verification results](docs/verification.md) and [retrieval metrics](evaluations/reports/status.json). Local workflow tests use controlled providers. Real embedding/reranking models were evaluated against 40 development and 40 held-out cases. The authorized Jira create/read smoke test passed (SCRUM-5). The application and evaluation judge use `LLM_MODEL`; `gpt-4o-mini` is the example/default, not a fixed requirement. Historical reports record the model actually used. Live smoke-test results are recorded in the verification report; full held-out answer evaluation remains pending. AWS hosting, public authentication validation, load testing, and independently reviewed answer quality remain deployment gates.
+See [verification results](docs/verification.md) and [retrieval metrics](evaluations/reports/status.json). Local workflow tests use controlled providers. Real embedding/reranking models were evaluated against 40 development and 40 held-out cases. The authorized Jira create/read smoke test passed (SCRUM-5). The application and evaluation judge use `LLM_MODEL`; `gpt-4o-mini` is the example/default, not a fixed requirement. Historical reports record the model actually used. Live smoke-test results are recorded in the verification report; the November 22 held-out answer run covered all 46 current cases (38 of 39 answerable questions received citations). AWS hosting, public authentication validation, load testing, and independently reviewed answer quality remain deployment gates.
 
 The corpus includes adapted HR source material and explicitly synthetic IT guidance; it is not a real employer's policy. The original HR dataset's scope is narrower than all HR questions. Unsupported topics should escalate. See [dataset provenance and gaps](docs/datasets.md).
 

@@ -81,7 +81,7 @@ class TicketService:
         return ticket
 
     def list(self, identity: Identity) -> list[Ticket]:
-        return self.provider.find(employee_label(identity.email))
+        return self.provider.find_owned(identity.email, employee_label(identity.email))
 
     def detail(self, identity: Identity, ticket_id: str) -> Ticket:
         matches = self.list(identity)

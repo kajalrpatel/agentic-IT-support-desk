@@ -411,7 +411,8 @@ def main():
         )
     supplements = [
         json.loads(line)
-        for line in (ROOT / "evaluations/datasets/leave_policy.jsonl")
+        for filename in ("leave_policy.jsonl", "employee_handbook.jsonl")
+        for line in (ROOT / "evaluations/datasets" / filename)
         .read_text(encoding="utf-8")
         .splitlines()
         if line.strip()
@@ -421,6 +422,11 @@ def main():
     evaluation_path = ROOT / "evaluations/datasets/knowledge.jsonl"
     evaluation_path.parent.mkdir(parents=True, exist_ok=True)
     evaluation_path.write_text("".join(json.dumps(c) + "\n" for c in cases), encoding="utf-8")
+    supplemental_ids = sorted({doc for case in supplements for doc in case["expected_documents"]})
+    for identifier in supplemental_ids:
+        if not (KB / "hr" / f"{identifier}.md").is_file():
+            raise FileNotFoundError(f"Missing supplemental HR document: {identifier}")
+    hr_count = len(HR_IDS) + len(supplemental_ids)
     manifest["curation"] = {
         "company": "NovaTech (fictional)",
         "hr_row_indices_zero_based": HR_IDS,
@@ -436,15 +442,15 @@ def main():
             "prompt_version": "option-c-v1",
             "review": "Reviewed as vendor-neutral fictional company procedures; no product-specific command sequences included",
         },
-        "synthetic_hr_documents": ["hr-leave-policy"],
-        "synthetic_hr_review": "Assistant-drafted fictional leave policy approved for indexing by the user on 2026-11-21; not an upstream dataset policy or legal advice",
-        "document_count": len(HR_IDS) + len(IT) + 1,
-        "evaluation_version": "2026-11-21-leave-policy-v1",
+        "synthetic_hr_documents": supplemental_ids,
+        "synthetic_hr_review": "Assistant-authored fictional handbook content for the NovaTech project. The user approved indexing the leave policy on 2026-11-21 and requested wider topic coverage on 2026-11-22.",
+        "document_count": hr_count + len(IT),
+        "evaluation_version": "2026-11-22-handbook-v2",
         "known_gaps": [case["query"] for case in cases if not case["answerable"]],
     }
     (KB / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(
-        f"Prepared {len(HR_IDS)} HR documents, {len(IT)} IT documents, {len(cases)} evaluation cases"
+        f"Prepared {hr_count} HR documents, {len(IT)} IT documents, {len(cases)} evaluation cases"
     )
 
 

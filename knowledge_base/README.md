@@ -1,6 +1,6 @@
 # Knowledge base
 
-This corpus describes **NovaTech**, a fictional company. It contains 32 HR entries curated from `strova-ai/hr-policies-qa-dataset`, the approved synthetic [Employee Leave Policy](hr/hr-leave-policy.md), and 32 synthetic IT documents. Source policies are not statements about an actual employer or legal advice.
+This corpus describes **NovaTech**, a fictional company. It contains 32 HR entries curated from `strova-ai/hr-policies-qa-dataset`, eight fictional handbook documents covering leave, payroll, reimbursement, onboarding, performance reviews and harassment reporting, and 32 synthetic IT documents. Source policies are not statements about an actual employer or legal advice.
 
 Each indexed Markdown document has YAML front matter: ID, title, domain, source, version, effective date, access scope, synthetic flag, and review status. Only `reviewed` or `reviewed-fictional` records are eligible for ingestion. Original HR files are downloaded to ignored `raw/`; the manifest preserves the exact revision and checksum.
 

@@ -85,3 +85,41 @@ def test_create_timeout_is_never_retried():
             "sd-employee-one",
         )
     assert len(calls) == 1
+
+
+@pytest.mark.parametrize("address_visible", [True, False])
+def test_owned_lookup_combines_labels_and_verified_reporter_only(address_visible):
+    email = "employee@example.org"
+
+    def issue(key, labels):
+        return {
+            "key": key,
+            "fields": {"summary": "Issue", "status": {"name": "Open"}, "labels": labels},
+        }
+
+    def handler(request):
+        if request.url.path.endswith("/user/search"):
+            return httpx.Response(
+                200,
+                json=[
+                    {
+                        "accountId": "wrong",
+                        "displayName": email,
+                        "emailAddress": "other@example.org",
+                    },
+                    {
+                        "accountId": "employee",
+                        "emailAddress": email.upper() if address_visible else None,
+                    },
+                ],
+            )
+        if "reporter" in request.url.params["jql"]:
+            assert address_visible and 'reporter = "employee"' in request.url.params["jql"]
+            issues = [issue("IT-2", []), issue("IT-3", ["sd-employee-other"])]
+        else:
+            issues = [issue("IT-1", ["sd-employee-test"])]
+        return httpx.Response(200, json={"issues": issues})
+
+    assert [t.id for t in jira(handler).find_owned(email, "sd-employee-test")] == (
+        ["IT-1", "IT-2"] if address_visible else ["IT-1"]
+    )

@@ -91,18 +91,46 @@ class JiraClient:
             r"[A-Za-z][A-Za-z0-9_]*", self.settings.jira_project_key
         ):
             raise ServiceError("Invalid ticket lookup configuration.")
+        return self._search(f'labels = "{label}"')
+
+    def find_owned(self, email: str, label: str) -> list[Ticket]:
+        labelled = self.find(label)
+        if email.casefold() == self.settings.jira_email.casefold():
+            return labelled
+        users = self.request("GET", "/user/search", params={"query": email, "maxResults": 100})
+        ids = {
+            u["accountId"]
+            for u in users
+            if (u.get("emailAddress") or "").casefold() == email.casefold() and u.get("accountId")
+        }
+        if len(ids) != 1:
+            return labelled
+        account = ids.pop()
+        if not re.fullmatch(r"[A-Za-z0-9:_-]+", account):
+            raise ServiceError("Unable to verify your Jira account.")
+        reported = self._search(f'reporter = "{account}"', exclude_managed=True)
+        return list({t.id: t for t in [*labelled, *reported]}.values())
+
+    def _search(self, condition: str, *, exclude_managed: bool = False) -> list[Ticket]:
         tickets: list[Ticket] = []
         token = None
         for _ in range(50):
             params = {
-                "jql": f'project = "{self.settings.jira_project_key}" AND labels = "{label}" ORDER BY created DESC',
-                "fields": "summary,status",
+                "jql": f'project = "{self.settings.jira_project_key}" AND {condition} ORDER BY created DESC',
+                "fields": "summary,status,labels",
                 "maxResults": 100,
             }
             if token:
                 params["nextPageToken"] = token
             result = self.request("GET", "/search/jql", params=params)
-            tickets.extend(self.convert(issue) for issue in result.get("issues", []))
+            for issue in result.get("issues", []):
+                labels = issue["fields"].get("labels")
+                if exclude_managed and (
+                    labels is None
+                    or any(tag == "smartdesk" or tag.startswith("sd-employee-") for tag in labels)
+                ):
+                    continue
+                tickets.append(self.convert(issue))
             token = result.get("nextPageToken")
             if not token:
                 return tickets

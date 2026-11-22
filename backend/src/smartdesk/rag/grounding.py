@@ -21,17 +21,38 @@ class GroundingVerifier:
         ):
             record_event("rag_abstention", stage="citation_validation", reason="invalid_citations")
             return None
-        verdict = self.model.verify(
-            {
-                "question": question,
-                "passages": [asdict(p) for p in passages],
-                "answer": answer.model_dump(),
-            }
-        )
-        if not verdict.supported:
+        # Judge each atomic claim using only the sources attached to that claim.
+        # Keep supported guidance if another, unnecessary claim fails verification.
+        supported = []
+        for claim in answer.claims:
+            verdict = self.model.verify(
+                {
+                    "question": question,
+                    "passages": [asdict(valid[i]) for i in dict.fromkeys(claim.citation_ids)],
+                    "claim": claim.model_dump(),
+                }
+            )
+            if verdict.supported:
+                supported.append(claim)
+        if not supported:
             record_event("rag_abstention", stage="verification", reason="unsupported_answer")
             return None
-        record_event("evidence_verified", claims=len(answer.claims))
+        # An omitted qualification can change the meaning of the surviving claims.
+        if len(supported) != len(answer.claims):
+            verdict = self.model.verify(
+                {
+                    "question": question,
+                    "retained_claims": [claim.model_dump() for claim in supported],
+                    "passages": [
+                        asdict(valid[i])
+                        for i in dict.fromkeys(i for c in supported for i in c.citation_ids)
+                    ],
+                }
+            )
+            if not verdict.supported:
+                return None
+        answer = answer.model_copy(update={"claims": supported})
+        record_event("evidence_verified", claims=len(supported))
         used = list(dict.fromkeys(i for c in answer.claims for i in c.citation_ids))
         citations = [
             Citation(id=i, title=valid[i].title, excerpt=valid[i].text, source=valid[i].source)

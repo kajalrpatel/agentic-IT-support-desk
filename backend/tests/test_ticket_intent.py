@@ -67,11 +67,22 @@ def test_explicit_ticket_request_takes_precedence_over_guidance(system):
     assert decision["route"]["intent"] == "ticket"
 
 
-def test_accepting_escalation_reaches_ticket_preparation(system):
+@pytest.mark.parametrize(
+    "acceptance", ["yes, please", "Sure, jane.doe@company.com.", "Yes, please do that."]
+)
+def test_accepting_escalation_reaches_ticket_preparation(system, acceptance):
     from smartdesk.agents.supervisor_agent import build_supervisor_nodes
 
     route, _ = build_supervisor_nodes(system.model)
     decision = route(
-        {"text": "yes, please", "email": system.identity.email, "response": {"text": ESCALATE}}
+        {"text": acceptance, "email": system.identity.email, "response": {"text": ESCALATE}}
     )
     assert decision["route"]["intent"] == "ticket"
+
+
+@pytest.mark.parametrize(
+    "reply",
+    ["Yes, but don't create a ticket", "Sure, first explain my options", "jane@example.com"],
+)
+def test_offer_with_qualification_or_only_email_is_not_consent(reply):
+    assert not ticket_preparation_requested(reply, {"text": ESCALATE})

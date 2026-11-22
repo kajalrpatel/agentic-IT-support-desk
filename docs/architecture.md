@@ -12,7 +12,7 @@ The repository contains two independently buildable applications. The backend is
 
 `rag/rag_factory.py` constructs concrete embedding, store, and reranking components for application startup, the CLI, and evaluation. Its returned component bundle owns the Qdrant client and must be closed by the caller. The shared OpenAI client remains in `infrastructure/llm/` because routing and conversation summarization also use it; answer and verifier prompts belong to `rag/answer_prompts/`.
 
-This refactor preserves the `paragraph-v1` chunker, content hashes, UUID-based point IDs, named vectors, collection name, and index signature format. Existing collections can be reused. It does not change retrieval thresholds or resolve the documented model false-escalation issues.
+Short entries stay intact. Long handbooks split at Markdown headings, with the heading path repeated for context and a 1,500-character passage budget. On the same leave handbook, paragraph-v1 produced 12 passages, two spanning multiple major sections. With section-v2, 26 content passages retain their section heading and one carries the introduction. None crosses major sections. A same-embedding paragraph-v1 index upgrades in one ingestion; section passages receive distinct IDs. An embedding change requires a new collection.
 
 ```mermaid
 flowchart LR
@@ -57,7 +57,7 @@ Drafts are displayed with employee email, summary, description, category, and re
 
 A unique creation-attempt record is committed before contacting Jira. The correlation label is attached to the issue in the same create request. Explicit provider rejections can be retried; uncertain outcomes are reconciled by searching the label. If reconciliation finds no unique ticket, the service reports uncertainty and does not issue another create request. Jira status is always fetched live.
 
-An email-derived employee label enables lookup of tickets created or deliberately tagged for this application. It does not import all existing Jira tickets. Only a verified identity's label is used, and direct ticket IDs must pass ownership checks. Restricted Jira comments are excluded from the response.
+The ticket service looks up the verified employee label and directly reported issues associated with the employee's verified Jira account. Both listing and detail use the same ownership checks. See [operations](operations.md) for Jira permissions and email visibility requirements.
 
 ## Transport and concurrency
 

@@ -122,3 +122,36 @@ def test_domain_filter_applies_before_candidate_selection(components, mode, doma
     )
     retrieval = RetrievalPipeline(embedder, store, reranker, candidate_limit=1)
     assert [p.id for p in retrieval.search("support", mode, domain=domain)] == [domain.lower()]
+
+
+def test_verifier_keeps_relevant_claim_using_only_its_own_evidence():
+    from smartdesk.rag.grounding import GroundingVerifier
+    from smartdesk.rag.rag_models import Claim, EvidenceVerdict, GroundedAnswer, Passage
+
+    passages = [
+        Passage("earned", "Vacation", "Vacation is 15 days.", "test"),
+        Passage("casual", "Casual", "Casual leave is for short commitments.", "test"),
+    ]
+
+    class Judge:
+        def verify(self, data):
+            if "retained_claims" in data:
+                assert len(data["retained_claims"]) == 1
+                return EvidenceVerdict(supported=True, reason="Complete")
+            claim = data["claim"]
+            assert [p["id"] for p in data["passages"]] == claim["citation_ids"]
+            return EvidenceVerdict(supported=claim["citation_ids"] == ["earned"], reason="Checked")
+
+    result = GroundingVerifier(Judge()).verify(
+        "How much vacation?",
+        passages,
+        GroundedAnswer(
+            answerable=True,
+            claims=[
+                Claim(text="Vacation is 15 days.", citation_ids=["earned"]),
+                Claim(text="Use casual leave as vacation.", citation_ids=["casual"]),
+            ],
+        ),
+    )
+    assert result and result.text == "Vacation is 15 days. [1]"
+    assert [c.id for c in result.citations] == ["earned"]

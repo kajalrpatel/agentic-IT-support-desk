@@ -95,7 +95,7 @@ The second runner creates a new, versioned dataset and four scored LangSmith exp
 Paid answer generation exercises the supervisor and specialist handoff, without granting Jira write capabilities:
 
 ```powershell
-uv run python ../evaluations/runners/evaluate.py --local --split held_out --with-answers --limit 40 --output ../evaluations/reports/answers.json
+uv run python ../evaluations/runners/evaluate.py --local --split held_out --with-answers --limit 46 --output ../evaluations/reports/answers.json
 uv run python ../evaluations/runners/langsmith_answer_experiment.py ../evaluations/reports/answers.json --dataset-name smartdesk-answers-v1 --limit 5 --with-judge
 ```
 
@@ -104,7 +104,7 @@ LangSmith is the only evaluation framework. `answer_evaluators.py` contains cust
 To publish answers and citation coverage without paid judge calls:
 
 ```powershell
-uv run python ../evaluations/runners/langsmith_answer_experiment.py ../evaluations/reports/answers.json --dataset-name smartdesk-answer-coverage-v1 --limit 40
+uv run python ../evaluations/runners/langsmith_answer_experiment.py ../evaluations/reports/answers.json --dataset-name smartdesk-answer-coverage-v1 --limit 46
 ```
 
 Experiments replay recorded answers and include original total-answer and selected counts in metadata. All selected answers receive citation-coverage feedback. Uncited answers do not receive fabricated faithfulness or relevance scores. Coverage is not correctness; inspect false abstentions alongside the judged subset. Failed judge calls are evaluation errors, not zero scores. These scores are not directly comparable to scores from retired evaluator implementations.

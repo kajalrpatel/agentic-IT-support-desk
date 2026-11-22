@@ -45,7 +45,7 @@ These are local embedded-Qdrant runs with real FastEmbed models, not production 
 
 ## Operational limitations
 
-Public hosting is deferred. Production must use verified OIDC identity, TLS, secret management, and a reviewed access policy. Request replay is deduplicated and uncertain Jira writes are reconciled; fully automatic recovery from every application crash point is not implemented. Jira requested priority is currently recorded in the description, because each project's native priority/required-field mapping must be verified. Existing tickets require the app's employee ownership label to appear in lookup results.
+Public hosting is deferred. Production must use verified OIDC identity, TLS, secret management, and a reviewed access policy. Request replay is deduplicated and uncertain Jira writes are reconciled; fully automatic recovery from every application crash point is not implemented. Jira requested priority is currently recorded in the description, because each project's native priority/required-field mapping must be verified. At the time of this smoke test, existing tickets required the employee ownership label. The current reporter lookup is described in [operations](operations.md).
 
 Qdrant is pinned to 1.20.0 to match the installed client; see the [official release](https://github.com/qdrant/qdrant/releases/tag/v1.20.0). The initial 1.14 development index volume is retained separately; the final collection is rebuilt in a new volume.
 
@@ -67,3 +67,18 @@ The exact query and a paraphrase returned verified citations in live `gpt-4o-min
 The request `i want to return my laptop` reproduced unnecessary clarification even though the IT specialist could retrieve and answer from `it-device-return:0`. The supervisor now prefers documented guidance for procedural goals, resolves answered clarifications without repeating them, and distinguishes ticket requests from procedural requests using a separate ticket-intent gate.
 
 Six live routing checks passed: all four messages from the reported clarification loop selected IT knowledge; the initial and final messages returned verified equipment-return citations. Explicit ticket preparation and acceptance of a real escalation offer still selected the ticket route with populated details. These checks did not create Jira tickets. The regression runner is `backend/scripts/verify_return_routing.py`; the detailed local report is `evaluations/reports/return_routing_regressions.json`. Existing pending drafts are preserved until cancelled or confirmed; the fix does not silently delete prior conversation state.
+
+## Handbook and workflow verification, 2026-11-22
+
+The running backend indexed 98 passages from 72 documents. The expanded held-out split was evaluated with the configured model through the supervisor and specialist agents. Retrieval used real local models and embedded Qdrant. All 46 cases completed. The complete local report is `evaluations/reports/handbook-held-out.json`; the aggregate below can be reproduced with `evaluate.py --local --split held_out --with-answers`.
+
+| Retrieval over 39 answerable cases | Recall@5 | MRR |
+| --- | ---: | ---: |
+| Dense | 0.974 | 0.882 |
+| Sparse | 0.872 | 0.803 |
+| Hybrid | 0.974 | 0.844 |
+| Hybrid with reranking | 1.000 | 0.905 |
+
+The expected domain was selected in 37/39 answerable cases. The two mismatches concerned personal devices and external file sharing, both of which overlap HR policy and IT guidance. 38/39 answerable questions received citations. The payout of unused compensatory time triggered an unnecessary escalation despite retrieval of the correct passage. All seven deliberately unsupported cases received uncited responses. Five offered tickets, one declined a private contact request, and one referred a personal approval question to HR. Citation coverage measures behavior and requires separate review for factual accuracy.
+
+The vacation answer cited 15 paid earned-leave days per year and 1.25 days accrued per completed month. The previous casual-leave inference was absent. Through the running HTTP API, vacation and payday questions returned policy citations, a VPN follow-up about Mac retained context, and a general compensatory-time question returned cited guidance. A monitor escalation followed by assent with an email produced a populated preview, which was cancelled. Live status lookup returned tickets. Mocked Jira integration tests covered a directly reported unlabelled issue, hidden reporter email and exclusion of another employee's managed issue. A live directly reported employee fixture was unavailable in this check.

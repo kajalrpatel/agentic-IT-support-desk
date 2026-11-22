@@ -10,7 +10,6 @@ from pathlib import Path
 from agent_case import run_agent_case
 from qdrant_client import QdrantClient
 from report_metrics import answer_behavior_scores, compare_retrieval_modes
-
 from smartdesk.config import Settings
 from smartdesk.infrastructure.llm.openai_client import LanguageModel
 from smartdesk.rag.query_pipeline import QueryPipeline
@@ -28,10 +27,10 @@ def main():
     parser.add_argument(
         "--with-answers", action="store_true", help="Calls the paid LLM for each case"
     )
-    parser.add_argument("--limit", type=int, default=40)
+    parser.add_argument("--limit", type=int, help="Maximum cases in the split (default: all)")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    if args.limit < 1:
+    if args.limit is not None and args.limit < 1:
         parser.error("--limit must be positive")
     settings = Settings(_env_file=ROOT / ".env", model_cache_dir=str(ROOT / ".cache/models"))
     client = QdrantClient(":memory:") if args.local else None

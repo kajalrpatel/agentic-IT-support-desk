@@ -19,12 +19,18 @@ class IngestionPipeline:
             raise ValueError("Refusing to replace the index with an empty corpus.")
         signature = f"{self.embedder.signature}|{CHUNKER_VERSION}"
         old = self.store.records()
-        if any(r.get("index_signature") != signature for r in old.values()):
+        compatible = {signature, f"{self.embedder.signature}|paragraph-v1"}
+        if any(r.get("index_signature") not in compatible for r in old.values()):
             raise ValueError("Index model/chunker mismatch. Use a new QDRANT_COLLECTION.")
         identifiers = {r["id"] for r in records}
         if len(identifiers) != len(records):
             raise ValueError("Duplicate chunk IDs")
-        changed = [r for r in records if old.get(r["id"], {}).get("hash") != r["hash"]]
+        changed = [
+            r
+            for r in records
+            if old.get(r["id"], {}).get("hash") != r["hash"]
+            or old[r["id"]].get("index_signature") != signature
+        ]
         if changed:
             vectors = self.embedder.embed_documents(
                 [r["title"] + "\n" + r["text"] for r in changed]
