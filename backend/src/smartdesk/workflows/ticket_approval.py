@@ -1,6 +1,6 @@
 from langgraph.types import interrupt
 
-from smartdesk.api.api_schemas import ChatResponse, Draft
+from smartdesk.application.conversation_models import ChatResponse, Draft
 from smartdesk.domain.support_models import ServiceError
 from smartdesk.workflows.conversation_state import ChatState
 

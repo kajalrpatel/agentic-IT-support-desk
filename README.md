@@ -28,8 +28,8 @@ The interface and health checks can start without provider credentials. Answer g
 ```text
 backend/
   src/smartdesk/
-    api/                 Request and response contracts
-    application/         Chat and ticket services
+    api/                 HTTP schemas and routers for health, authentication, and conversations
+    application/         Chat and ticket workflows, shared models, and storage interfaces
     domain/              Provider-independent models and errors
     workflows/           Persistent LangGraph orchestration
     infrastructure/      Shared identity, PostgreSQL, OpenAI, and Jira adapters

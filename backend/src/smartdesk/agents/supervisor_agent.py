@@ -1,5 +1,5 @@
 from smartdesk.agents.ticket_intent import ticket_preparation_requested
-from smartdesk.api.api_schemas import ChatResponse
+from smartdesk.application.conversation_models import ChatResponse
 from smartdesk.infrastructure.llm.openai_client import LanguageModel
 from smartdesk.observability.trace_events import record_event
 from smartdesk.workflows.conversation_state import ChatState

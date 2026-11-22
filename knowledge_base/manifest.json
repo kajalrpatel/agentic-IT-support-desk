@@ -66,22 +66,295 @@
     ],
     "synthetic_hr_review": "Assistant-authored fictional handbook content for the NovaTech project. The user approved indexing the leave policy on 2026-11-21 and requested wider topic coverage on 2026-11-22.",
     "document_count": 72,
-    "evaluation_version": "2026-11-22-handbook-v2",
-    "known_gaps": [
-      "Where do I park my car at the office?",
-      "My monitor flickers; which hardware component should I replace?",
-      "What is the reimbursement limit for business meals?",
-      "How long is my probation period?",
-      "What percentage of stock vests in the first year?",
-      "Does our insurance cover dental surgery?",
-      "Which office parking spaces are reserved for motorcycles?",
-      "What cable fixes a flickering monitor?",
-      "What is my salary breakdown?",
-      "What is the annual performance bonus percentage?",
-      "Can you tell me the CEO's personal phone number?",
-      "What is our office pet policy?",
-      "How many vacation days do I personally have remaining today?",
-      "Has my manager approved my vacation request for next Friday?"
+    "documents": [
+      {
+        "id": "hr-000",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-001",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-006",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-021",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-022",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-023",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-024",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-028",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-029",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-040",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-042",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-044",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-048",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-136",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-364",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-367",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-371",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-372",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-375",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-384",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-399",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-401",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-405",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-413",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-420",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-602",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-603",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-604",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-606",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-609",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-623",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-629",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-expense-reimbursement",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-harassment-reporting",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-leave-policy",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-onboarding-benefits",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-onboarding-buddy",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-payroll-calendar",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-payroll-tax-declarations",
+        "domain": "HR"
+      },
+      {
+        "id": "hr-performance-review",
+        "domain": "HR"
+      },
+      {
+        "id": "it-account-lockout",
+        "domain": "IT"
+      },
+      {
+        "id": "it-admin-rights",
+        "domain": "IT"
+      },
+      {
+        "id": "it-browser-errors",
+        "domain": "IT"
+      },
+      {
+        "id": "it-data-backup",
+        "domain": "IT"
+      },
+      {
+        "id": "it-device-loss",
+        "domain": "IT"
+      },
+      {
+        "id": "it-device-return",
+        "domain": "IT"
+      },
+      {
+        "id": "it-email-mobile",
+        "domain": "IT"
+      },
+      {
+        "id": "it-email-sync",
+        "domain": "IT"
+      },
+      {
+        "id": "it-file-sharing",
+        "domain": "IT"
+      },
+      {
+        "id": "it-meeting-audio",
+        "domain": "IT"
+      },
+      {
+        "id": "it-mfa-enrollment",
+        "domain": "IT"
+      },
+      {
+        "id": "it-mfa-lost-device",
+        "domain": "IT"
+      },
+      {
+        "id": "it-mfa-unexpected",
+        "domain": "IT"
+      },
+      {
+        "id": "it-new-device",
+        "domain": "IT"
+      },
+      {
+        "id": "it-onboarding-access",
+        "domain": "IT"
+      },
+      {
+        "id": "it-password-manager",
+        "domain": "IT"
+      },
+      {
+        "id": "it-password-reset",
+        "domain": "IT"
+      },
+      {
+        "id": "it-phishing",
+        "domain": "IT"
+      },
+      {
+        "id": "it-printer-access",
+        "domain": "IT"
+      },
+      {
+        "id": "it-remote-desktop",
+        "domain": "IT"
+      },
+      {
+        "id": "it-screen-lock",
+        "domain": "IT"
+      },
+      {
+        "id": "it-shared-drive",
+        "domain": "IT"
+      },
+      {
+        "id": "it-software-install",
+        "domain": "IT"
+      },
+      {
+        "id": "it-software-license",
+        "domain": "IT"
+      },
+      {
+        "id": "it-software-update",
+        "domain": "IT"
+      },
+      {
+        "id": "it-support-priority",
+        "domain": "IT"
+      },
+      {
+        "id": "it-ticket-details",
+        "domain": "IT"
+      },
+      {
+        "id": "it-vpn-errors",
+        "domain": "IT"
+      },
+      {
+        "id": "it-vpn-mac",
+        "domain": "IT"
+      },
+      {
+        "id": "it-vpn-setup",
+        "domain": "IT"
+      },
+      {
+        "id": "it-wifi-employee",
+        "domain": "IT"
+      },
+      {
+        "id": "it-wifi-guest",
+        "domain": "IT"
+      }
     ]
   }
 }

@@ -18,6 +18,7 @@ from smartdesk.infrastructure.llm.openai_client import (
 )
 from smartdesk.infrastructure.postgres.conversation_repository import Repository
 from smartdesk.infrastructure.postgres.database_models import Base
+from smartdesk.infrastructure.postgres.ticket_attempt_repository import TicketAttemptRepository
 from smartdesk.main import create_app
 from smartdesk.rag.query_pipeline import QueryPipeline
 from smartdesk.rag.rag_models import Claim, EvidenceVerdict, GroundedAnswer, Passage
@@ -128,7 +129,7 @@ def system(tmp_path):
     connection = sqlite3.connect(str(tmp_path / "checkpoints.db"), check_same_thread=False)
     saver = SqliteSaver(connection)
     model, retriever, provider = FakeModel(), FakeRetriever(), FakeTickets()
-    ticket_service = TicketService(repo, provider)
+    ticket_service = TicketService(TicketAttemptRepository(repo.sessions), provider)
     graph = build_graph(model, QueryPipeline(retriever, model), ticket_service, saver)
     chat = ChatService(repo, graph, rate_limit=100)
     identity = Identity("jane", "jane@example.com")

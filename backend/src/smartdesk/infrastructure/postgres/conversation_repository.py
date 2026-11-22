@@ -1,13 +1,14 @@
 import hashlib
 import threading
 from contextlib import contextmanager
+from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
-from sqlalchemy import create_engine, select, text
+from sqlalchemy import create_engine, func, select, text
 from sqlalchemy.orm import sessionmaker
 
 from smartdesk.domain.support_models import ServiceError
-from smartdesk.infrastructure.postgres.database_models import Conversation, Message
+from smartdesk.infrastructure.postgres.database_models import Conversation, Message, Request
 
 
 class Repository:
@@ -16,6 +17,10 @@ class Repository:
         self.sessions = sessionmaker(self.engine, expire_on_commit=False)
         self._locks: dict[str, threading.Lock] = {}
         self._guard = threading.Lock()
+
+    def check_readiness(self) -> None:
+        with self.engine.connect() as connection:
+            connection.execute(text("SELECT 1 FROM conversations LIMIT 1"))
 
     def create_conversation(self, owner: str) -> Conversation:
         with self.sessions.begin() as session:
@@ -78,3 +83,78 @@ class Repository:
                 yield
             finally:
                 lock.release()
+
+    def request_replay(
+        self, conversation: str, request_id: str, fingerprint: str, owner: str, rate_limit: int
+    ) -> dict | None:
+        with self.sessions() as session:
+            previous = session.get(Request, request_id)
+            if previous:
+                if previous.conversation_id != conversation or previous.fingerprint != fingerprint:
+                    raise ServiceError(
+                        "Request ID has already been used for a different operation.", 409
+                    )
+                if previous.response:
+                    return previous.response
+                raise ServiceError(
+                    "This request was interrupted or is still being reconciled. Reload the conversation before sending a new request.",
+                    409,
+                )
+            count = session.scalar(
+                select(func.count())
+                .select_from(Request)
+                .join(Conversation)
+                .where(
+                    Conversation.owner == owner,
+                    Request.created_at > datetime.now(UTC) - timedelta(minutes=1),
+                )
+            )
+            if count and count >= rate_limit:
+                raise ServiceError("Too many messages. Please wait a minute.", 429)
+            return None
+
+    def start_request(
+        self, conversation: str, request_id: str, fingerprint: str, text: str
+    ) -> None:
+        with self.sessions.begin() as session:
+            session.add(
+                Request(id=request_id, conversation_id=conversation, fingerprint=fingerprint)
+            )
+            session.add(
+                Message(
+                    conversation_id=conversation,
+                    role="user",
+                    content=text,
+                    request_id=request_id,
+                )
+            )
+            item = session.get(Conversation, conversation)
+            if item and item.title == "New conversation":
+                item.title = text[:80]
+
+    def complete_request(
+        self, conversation: str, request_id: str, text: str, response: dict
+    ) -> None:
+        with self.sessions.begin() as session:
+            record = session.get(Request, request_id)
+            assert record is not None
+            record.status = "complete"
+            record.response = response
+            session.add(
+                Message(
+                    conversation_id=conversation,
+                    role="assistant",
+                    content=text,
+                    request_id=request_id,
+                    response=response,
+                )
+            )
+
+    def history(self, conversation: str) -> list[dict[str, str]]:
+        with self.sessions() as session:
+            rows = session.execute(
+                select(Message.role, Message.content)
+                .where(Message.conversation_id == conversation)
+                .order_by(Message.id)
+            )
+            return [{"role": role, "content": content} for role, content in rows]

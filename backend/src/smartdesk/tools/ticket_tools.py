@@ -1,6 +1,6 @@
 from dataclasses import asdict
 
-from smartdesk.api.api_schemas import ChatResponse, Draft, TicketView
+from smartdesk.application.conversation_models import ChatResponse, Draft, TicketView
 from smartdesk.application.ticket_service import TicketService
 from smartdesk.domain.support_models import Identity, ServiceError
 from smartdesk.workflows.conversation_state import ChatState

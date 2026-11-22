@@ -1,12 +1,12 @@
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "evaluations/runners"))
 from types import SimpleNamespace
 
-from answer_evaluators import AnswerJudgment, build_answer_judge, citation_coverage
-from langsmith_experiment import score_retrieval
-from report_metrics import retrieval_scores
+from evaluations.runners.answer_evaluators import (
+    AnswerJudgment,
+    build_answer_judge,
+    citation_coverage,
+)
+from evaluations.runners.langsmith_experiment import score_retrieval
+from evaluations.runners.report_metrics import retrieval_scores
 
 
 def test_recall_deduplicates_and_mrr_uses_first_relevant_rank():
@@ -21,12 +21,19 @@ def test_langsmith_feedback_uses_expected_document_labels():
         SimpleNamespace(outputs={"retrieved": ["wrong", "correct"]}),
         SimpleNamespace(outputs={"expected_documents": ["correct"]}),
     )
-    assert result["results"] == [{"key": "recall_at_5", "score": 1.0}, {"key": "mrr", "score": 0.5}]
+    assert result["results"] == [
+        {"key": "recall_at_5", "score": 1.0},
+        {"key": "mrr", "score": 0.5},
+    ]
 
 
 def test_uncited_answer_does_not_get_fabricated_judge_score():
-    run = SimpleNamespace(outputs={"response": {"citations": []}, "retrieved_contexts": []})
-    assert build_answer_judge(None, "configured-test-model")(run, None) == {"results": []}
+    run = SimpleNamespace(
+        outputs={"response": {"citations": []}, "retrieved_contexts": []}
+    )
+    assert build_answer_judge(None, "configured-test-model")(run, None) == {
+        "results": []
+    }
     assert citation_coverage(run, None)["score"] == 0
 
 

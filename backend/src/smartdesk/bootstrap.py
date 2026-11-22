@@ -10,6 +10,7 @@ from smartdesk.infrastructure.identity.authentication import Auth
 from smartdesk.infrastructure.jira.jira_client import JiraClient
 from smartdesk.infrastructure.llm.openai_client import LanguageModel
 from smartdesk.infrastructure.postgres.conversation_repository import Repository
+from smartdesk.infrastructure.postgres.ticket_attempt_repository import TicketAttemptRepository
 from smartdesk.rag.query_pipeline import QueryPipeline
 from smartdesk.rag.rag_factory import build_rag
 from smartdesk.workflows.conversation_workflow import build_graph
@@ -35,7 +36,10 @@ def bootstrap(settings: Settings, stack: ExitStack) -> Services:
     jira = JiraClient(settings)
     stack.callback(jira.client.close)
     graph = build_graph(
-        model, QueryPipeline(rag.retrieval, model), TicketService(repo, jira), checkpointer
+        model,
+        QueryPipeline(rag.retrieval, model),
+        TicketService(TicketAttemptRepository(repo.sessions), jira),
+        checkpointer,
     )
     return Services(
         repo, ChatService(repo, graph, settings.max_messages_per_minute), Auth(settings), settings

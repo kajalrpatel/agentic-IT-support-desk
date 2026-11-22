@@ -7,9 +7,15 @@ import time
 from contextlib import ExitStack
 from pathlib import Path
 
-from agent_case import run_agent_case
 from qdrant_client import QdrantClient
-from report_metrics import answer_behavior_scores, compare_retrieval_modes
+
+if __package__:
+    from .agent_case import run_agent_case
+    from .report_metrics import answer_behavior_scores, compare_retrieval_modes
+else:  # Direct invocation from backend/ remains supported.
+    from agent_case import run_agent_case
+    from report_metrics import answer_behavior_scores, compare_retrieval_modes
+
 from smartdesk.config import Settings
 from smartdesk.infrastructure.llm.openai_client import LanguageModel
 from smartdesk.rag.query_pipeline import QueryPipeline
@@ -20,19 +26,25 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--split", choices=["development", "held_out"], default="held_out")
+    parser.add_argument(
+        "--split", choices=["development", "held_out"], default="held_out"
+    )
     parser.add_argument(
         "--local", action="store_true", help="Use a temporary embedded Qdrant index"
     )
     parser.add_argument(
         "--with-answers", action="store_true", help="Calls the paid LLM for each case"
     )
-    parser.add_argument("--limit", type=int, help="Maximum cases in the split (default: all)")
+    parser.add_argument(
+        "--limit", type=int, help="Maximum cases in the split (default: all)"
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     if args.limit is not None and args.limit < 1:
         parser.error("--limit must be positive")
-    settings = Settings(_env_file=ROOT / ".env", model_cache_dir=str(ROOT / ".cache/models"))
+    settings = Settings(
+        _env_file=ROOT / ".env", model_cache_dir=str(ROOT / ".cache/models")
+    )
     client = QdrantClient(":memory:") if args.local else None
     with ExitStack() as stack:
         rag = build_rag(settings, client)
@@ -46,7 +58,9 @@ def evaluate(args, settings, rag, stack):
         rag.ingestion.run(ROOT / "knowledge_base")
     cases = [
         json.loads(line)
-        for line in (ROOT / "evaluations/datasets/knowledge.jsonl").read_text().splitlines()
+        for line in (ROOT / "evaluations/datasets/knowledge.jsonl")
+        .read_text()
+        .splitlines()
     ]
     cases = [c for c in cases if c["split"] == args.split][: args.limit]
     report = {
@@ -71,7 +85,9 @@ def evaluate(args, settings, rag, stack):
             passages = retriever.search(case["query"], mode)
             ids = [p.id.split(":")[0] for p in passages]
             expected = set(case["expected_documents"])
-            ranks = [i + 1 for i, identifier in enumerate(ids) if identifier in expected]
+            ranks = [
+                i + 1 for i, identifier in enumerate(ids) if identifier in expected
+            ]
             results.append(
                 {
                     "id": case["id"],

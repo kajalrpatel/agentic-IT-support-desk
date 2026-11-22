@@ -13,6 +13,7 @@ from smartdesk.config import Settings
 from smartdesk.infrastructure.identity.authentication import Auth
 from smartdesk.infrastructure.postgres.conversation_repository import Repository
 from smartdesk.infrastructure.postgres.database_models import Base
+from smartdesk.infrastructure.postgres.ticket_attempt_repository import TicketAttemptRepository
 from smartdesk.main import create_app
 from smartdesk.rag.query_pipeline import QueryPipeline
 from smartdesk.workflows.conversation_workflow import build_graph
@@ -30,5 +31,10 @@ repo = Repository(settings.database_url)
 Base.metadata.create_all(repo.engine)
 saver = SqliteSaver(sqlite3.connect(str(root / "checkpoints.db"), check_same_thread=False))
 model, retriever, provider = FakeModel(), FakeRetriever(), FakeTickets()
-graph = build_graph(model, QueryPipeline(retriever, model), TicketService(repo, provider), saver)
+graph = build_graph(
+    model,
+    QueryPipeline(retriever, model),
+    TicketService(TicketAttemptRepository(repo.sessions), provider),
+    saver,
+)
 app = create_app(services=Services(repo, ChatService(repo, graph, 1000), Auth(settings), settings))

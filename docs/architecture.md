@@ -2,6 +2,12 @@
 
 The repository contains two independently buildable applications. The backend is a modular monolith with FastAPI transport, LangGraph orchestration, chat/ticket application services, and a self-contained `smartdesk.rag` feature. Shared adapters handle OpenAI, Jira, identity, and PostgreSQL; the Qdrant adapter belongs to RAG. The React frontend uses the versioned API; it does not access provider credentials or databases.
 
+## API and storage boundaries
+
+`main.py` creates the FastAPI application, installs middleware and registers the health, authentication and conversation routers in `api/routers/`. The conversation router owns messages, approval and streaming. Application models define the validated inputs and results shared with workflows. The API adds HTTP-specific conversation and transcript views.
+
+`ChatService` uses the conversation store interface for ownership checks, locking, request replay, history and transcript writes. Its PostgreSQL adapter records each request with its user message and each completed response with its assistant message. `TicketService` uses a separate ticket-attempt store for reservation and completion. It owns the decision to create a Jira issue or reconcile an uncertain submission. `bootstrap.py` connects both services to their adapters.
+
 ## RAG module boundaries
 
 `rag/ingestion.py` owns indexing: `document_loader.py` reads reviewed Markdown, `chunking.py` produces passages, `embedding.py` creates dense/sparse vectors, and `qdrant_store.py` persists them. There is one ingestion implementation. It compares hashes, rejects incompatible index signatures, updates changed chunks, and removes stale chunks only after successful upserts. Ingestion does not load the reranker.

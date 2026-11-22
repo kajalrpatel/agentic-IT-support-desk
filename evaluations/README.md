@@ -1,6 +1,14 @@
 # Evaluation
 
-`datasets/knowledge.jsonl` version `2026-11-22-handbook-v2` has 92 cases split evenly between development and held-out, each with 39 answerable and 7 unknown. Sick leave, vacation, and maternity entitlements are now answerable using the approved fictional leave policy. Personal balances and request approval status remain unknown. `datasets/leave_policy.jsonl` supplies the replacement labels and additional leave cases to the corpus preparation script; its reference answers are for review and are not automatically scored by the existing evaluators. Questions are not indexed. Historical reports predate this corpus expansion and must not be compared as though the dataset were unchanged. The supplied labels identify a preferred document; overlapping HR policies can make these labels conservative. Review relevance judgments before using a score as a deployment decision. These cases were assistant-authored alongside the fictional corpus, so a separately human-authored final set is still desirable.
+`datasets/knowledge.jsonl` version `2026-11-22-handbook-v2` has 92 cases split evenly between development and held-out, each with 39 answerable and 7 unknown. Sick leave, vacation, and maternity entitlements are now answerable using the approved fictional leave policy. Personal balances and request approval status remain unknown. Edit evaluation cases in `datasets/cases/`. The handbook case file includes leave coverage. Reference answers support manual review. Dataset assembly validates case IDs and expected document IDs against the corpus manifest before writing `datasets/knowledge.jsonl`. Questions are not indexed. Historical reports predate this corpus expansion and must not be compared as though the dataset were unchanged. The supplied labels identify a preferred document; overlapping HR policies can make these labels conservative. Review relevance judgments before using a score as a deployment decision. These cases were assistant-authored alongside the fictional corpus, so a separately human-authored final set is still desirable.
+
+From the repository root, rebuild the inventory and benchmark and run the evaluation unit tests:
+
+```sh
+uv run --project backend python backend/scripts/prepare_corpus.py --inventory-only
+uv run --project backend python -m evaluations.assemble_dataset
+uv run --project backend python -m pytest evaluations/tests
+```
 
 From `backend/`:
 

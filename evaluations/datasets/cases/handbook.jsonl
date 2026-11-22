@@ -7,3 +7,10 @@
 {"id":"leave-sick-encashment","query":"Can I get paid for unused sick leave?","expected_documents":["hr-leave-policy"],"answerable":true,"split":"held_out","reference_answer":"No. Sick leave cannot be encashed."}
 {"id":"leave-personal-balance-unavailable","query":"How many vacation days do I personally have remaining today?","expected_documents":[],"answerable":false,"split":"development","reference_answer":"Cannot determine a personal balance without authorized HR records; refer to the leave system or HR."}
 {"id":"leave-personal-approval-unavailable","query":"Has my manager approved my vacation request for next Friday?","expected_documents":[],"answerable":false,"split":"held_out","reference_answer":"Cannot determine an individual request's approval status without authorized leave records."}
+{"id": "hr-payroll-calendar", "query": "On which day is my salary paid?", "expected_documents": ["hr-payroll-calendar"], "answerable": true, "split": "development", "replaces_id": "unknown-03"}
+{"id": "hr-payroll-tax-declarations", "query": "How do I submit my tax declaration?", "expected_documents": ["hr-payroll-tax-declarations"], "answerable": true, "split": "held_out"}
+{"id": "hr-expense-reimbursement", "query": "How do I submit a reimbursement?", "expected_documents": ["hr-expense-reimbursement"], "answerable": true, "split": "development"}
+{"id": "hr-onboarding-benefits", "query": "How do I enrol in benefits when I join?", "expected_documents": ["hr-onboarding-benefits"], "answerable": true, "split": "held_out"}
+{"id": "hr-onboarding-buddy", "query": "Who assigns my onboarding buddy?", "expected_documents": ["hr-onboarding-buddy"], "answerable": true, "split": "development"}
+{"id": "hr-performance-review", "query": "How often is my performance reviewed?", "expected_documents": ["hr-performance-review"], "answerable": true, "split": "held_out"}
+{"id": "hr-harassment-reporting", "query": "How can I report harassment if my manager is involved?", "expected_documents": ["hr-harassment-reporting"], "answerable": true, "split": "development"}

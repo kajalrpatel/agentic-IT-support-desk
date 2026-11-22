@@ -4,9 +4,13 @@ import argparse
 import json
 from pathlib import Path
 
-from answer_evaluators import build_answer_judge, citation_coverage
 from langsmith import Client
 from openai import OpenAI
+
+if __package__:
+    from .answer_evaluators import build_answer_judge, citation_coverage
+else:  # Direct invocation from backend/ remains supported.
+    from answer_evaluators import build_answer_judge, citation_coverage
 
 from smartdesk.config import Settings
 
@@ -35,7 +39,8 @@ def main():
     if args.with_judge and not settings.openai_api_key.get_secret_value():
         raise SystemExit("OPENAI_API_KEY is required for --with-judge")
     client = Client(
-        api_key=settings.langsmith_api_key.get_secret_value(), api_url=settings.langsmith_endpoint
+        api_key=settings.langsmith_api_key.get_secret_value(),
+        api_url=settings.langsmith_endpoint,
     )
     dataset = client.create_dataset(
         dataset_name=args.dataset_name,
@@ -61,7 +66,9 @@ def main():
         }
 
     with OpenAI(
-        api_key=settings.openai_api_key.get_secret_value() or "unused", timeout=35, max_retries=0
+        api_key=settings.openai_api_key.get_secret_value() or "unused",
+        timeout=35,
+        max_retries=0,
     ) as judge:
         evaluators = [citation_coverage]
         if args.with_judge:

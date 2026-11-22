@@ -19,6 +19,15 @@ jobs:
       - run: uv run ruff format --check src tests scripts migrations
       - run: uv run mypy src
       - run: uv run pytest -q
+      - name: Check corpus inventory and evaluation dataset
+        working-directory: .
+        run: |
+          uv run --project backend python backend/scripts/prepare_corpus.py --inventory-only
+          uv run --project backend python -m evaluations.assemble_dataset
+          git diff --exit-code -- knowledge_base/manifest.json evaluations/datasets/knowledge.jsonl
+      - name: Evaluation unit tests
+        working-directory: .
+        run: uv run --project backend python -m pytest -q evaluations/tests
       - run: uv run smartdesk export-openapi
         env:
           SESSION_SECRET: ci-schema-generation-not-a-deployment-secret

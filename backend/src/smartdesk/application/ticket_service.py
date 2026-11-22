@@ -1,13 +1,11 @@
 import hashlib
 import json
-from dataclasses import asdict
 from uuid import NAMESPACE_URL, uuid5
 
-from smartdesk.api.api_schemas import Draft
+from smartdesk.application.conversation_models import Draft
+from smartdesk.application.ticket_attempt_store import TicketAttemptStore
 from smartdesk.application.ticket_provider import TicketProvider
 from smartdesk.domain.support_models import Identity, ServiceError, Ticket, TicketWriteRejected
-from smartdesk.infrastructure.postgres.conversation_repository import Repository
-from smartdesk.infrastructure.postgres.database_models import TicketAttempt
 
 
 def employee_label(email: str) -> str:
@@ -15,8 +13,8 @@ def employee_label(email: str) -> str:
 
 
 class TicketService:
-    def __init__(self, repo: Repository, provider: TicketProvider):
-        self.repo = repo
+    def __init__(self, attempts: TicketAttemptStore, provider: TicketProvider):
+        self.attempts = attempts
         self.provider = provider
 
     def create(
@@ -35,27 +33,12 @@ class TicketService:
         fingerprint = hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()
         attempt_id = str(uuid5(NAMESPACE_URL, f"{conversation}:{version}"))
         correlation = "sd-request-" + attempt_id
-        with self.repo.sessions.begin() as session:
-            record = session.get(TicketAttempt, attempt_id)
-            existing = record is not None
-            if record:
-                if record.owner != identity.user_id or record.draft_hash != fingerprint:
-                    raise ServiceError("This draft has changed. Confirm the updated version.", 409)
-                if record.ticket:
-                    return Ticket(**record.ticket)
-                existing = record.status != "rejected"
-                record.status = "pending"
-            else:
-                session.add(
-                    TicketAttempt(
-                        id=attempt_id,
-                        conversation_id=conversation,
-                        draft_version=version,
-                        owner=identity.user_id,
-                        draft_hash=fingerprint,
-                    )
-                )
-        if existing:
+        attempt = self.attempts.reserve(
+            attempt_id, conversation, identity.user_id, version, fingerprint
+        )
+        if attempt.ticket:
+            return attempt.ticket
+        if attempt.reconcile:
             matches = self.provider.find(correlation)
             if len(matches) != 1:
                 raise ServiceError(
@@ -68,16 +51,9 @@ class TicketService:
             try:
                 ticket = self.provider.create(data, correlation, employee_label(identity.email))
             except TicketWriteRejected:
-                with self.repo.sessions.begin() as session:
-                    record = session.get(TicketAttempt, attempt_id)
-                    assert record is not None
-                    record.status = "rejected"
+                self.attempts.reject(attempt_id)
                 raise
-        with self.repo.sessions.begin() as session:
-            record = session.get(TicketAttempt, attempt_id)
-            assert record is not None
-            record.ticket = asdict(ticket)
-            record.status = "created"
+        self.attempts.complete(attempt_id, ticket)
         return ticket
 
     def list(self, identity: Identity) -> list[Ticket]:
