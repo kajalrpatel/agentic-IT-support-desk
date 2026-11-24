@@ -1,4 +1,4 @@
-import { ChevronRight, ShieldCheck } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 export function WorkspaceHeader() {
   return (
     <header className="topbar">
@@ -7,10 +7,6 @@ export function WorkspaceHeader() {
         <ChevronRight size={14} />
         <span>Support desk</span>
       </div>
-      <span className="private-label">
-        <ShieldCheck size={14} />
-        Your employee workspace
-      </span>
     </header>
   );
 }

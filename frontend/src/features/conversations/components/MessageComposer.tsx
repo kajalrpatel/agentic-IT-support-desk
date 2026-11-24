@@ -46,10 +46,7 @@ export function MessageComposer({
           <ArrowUp size={20} />
         </button>
       </form>
-      <p>
-        SmartDesk uses company guidance. Always review a ticket before it’s
-        sent.
-      </p>
+
     </footer>
   );
 }

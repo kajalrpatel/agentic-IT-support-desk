@@ -8,28 +8,6 @@
   margin: 35px auto 20px;
   text-align: center;
 }
-.welcome-icon {
-  position: relative;
-  width: 68px;
-  height: 68px;
-  background: #edf1e5;
-  border: 1px solid #e2e7d8;
-  border-radius: 21px;
-  display: grid;
-  place-items: center;
-  margin: 0 auto 29px;
-  color: #3e6654;
-}
-.welcome-icon span {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: #8bad6c;
-  border: 3px solid #fafbf9;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-}
 .eyebrow {
   font-size: 9px;
   letter-spacing: 2.3px;
@@ -87,14 +65,6 @@ h1 {
   line-height: 1.6;
   margin-top: 8px;
 }
-.welcome-foot {
-  display: flex;
-  gap: 7px;
-  justify-content: center;
-  align-items: center;
-  color: #939e8e;
-  font-size: 10px;
-}
 .composer-wrap {
   padding: 15px 40px 23px;
   max-width: 880px;
@@ -136,12 +106,6 @@ h1 {
 .send:hover:not(:disabled) {
   background: #214932;
 }
-.composer-wrap > p {
-  font-size: 9px;
-  color: #a0a99b;
-  text-align: center;
-  margin: 12px 0 0;
-}
 .messages {
   max-width: 760px;
   margin: 15px auto;
@@ -177,12 +141,6 @@ h1 {
   align-items: center;
   gap: 12px;
   margin: 7px 0 11px;
-}
-.message-label span {
-  font-size: 8px;
-  letter-spacing: 1px;
-  color: #95a18c;
-  font-weight: 400;
 }
 .message-body > p {
   white-space: pre-wrap;

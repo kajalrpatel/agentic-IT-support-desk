@@ -45,7 +45,7 @@ test('cancelled ticket produces no creation success', async ({ page }) => {
 
 test('mobile welcome fits the viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.getByRole('heading', { name: /One desk/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: "Employee support" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
   await page.screenshot({ path: 'test-results/mobile-welcome.png', fullPage: true });
 });

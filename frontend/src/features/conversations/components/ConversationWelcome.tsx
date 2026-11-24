@@ -1,29 +1,27 @@
 import {
   BookOpen,
-  CheckCheck,
   ChevronRight,
-  Headphones,
   LifeBuoy,
   Ticket as TicketIcon,
 } from "lucide-react";
 const suggestions = [
   {
     icon: BookOpen,
-    title: "Find a policy",
+    title: "Compensatory leave",
     text: "What is the policy for compensatory time off?",
-    hint: "Leave, benefits & company guidelines",
+    hint: "View the time-off policy",
   },
   {
     icon: LifeBuoy,
-    title: "Get IT help",
+    title: "Reset my password",
     text: "How do I reset my password?",
-    hint: "Accounts, devices & getting connected",
+    hint: "Get account recovery steps",
   },
   {
     icon: TicketIcon,
-    title: "Check a ticket",
+    title: "My ticket status",
     text: "What is the status of my tickets?",
-    hint: "Follow up on an existing request",
+    hint: "See updates on my requests",
   },
 ];
 
@@ -38,21 +36,8 @@ export function ConversationWelcome({
 }) {
   return (
     <section className="welcome">
-      <div className="welcome-icon">
-        <Headphones size={31} />
-        <span />
-      </div>
-      <span className="eyebrow">A LITTLE HELP GOES A LONG WAY</span>
-      <h1>
-        One desk.
-        <br />
-        Less getting stuck.
-      </h1>
-      <p>
-        From a forgotten password to your next day off,
-        <br className="desktop-break" /> find an answer or get the right
-        support.
-      </p>
+      <h1>Employee support</h1>
+      <p>Ask an IT or HR question, or check an existing ticket.</p>
       <div className="suggestions">
         {suggestions.map(({ icon: Icon, title, text, hint }) => (
           <button
@@ -68,10 +53,6 @@ export function ConversationWelcome({
             <span>{hint}</span>
           </button>
         ))}
-      </div>
-      <div className="welcome-foot">
-        <CheckCheck size={15} />
-        Company sources. Clear answers. A human when you need one.
       </div>
     </section>
   );

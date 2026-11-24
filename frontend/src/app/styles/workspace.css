@@ -52,12 +52,6 @@
   font-weight: 600;
   box-shadow: 0 2px 3px #263e2410;
 }
-.nav-label {
-  font-size: 9px;
-  letter-spacing: 1.6px;
-  color: #889489;
-  margin: 0 11px 13px;
-}
 .nav-current {
   display: flex;
   gap: 10px;
@@ -104,24 +98,6 @@
   color: #879386;
   line-height: 1.7;
   padding: 0 10px;
-}
-.sidebar-note {
-  display: flex;
-  gap: 9px;
-  align-items: center;
-  padding: 16px 2px;
-  color: #5b7568;
-}
-.sidebar-note p {
-  font-size: 11px;
-  font-weight: 600;
-}
-.sidebar-note span {
-  display: block;
-  font-weight: 400;
-  font-size: 10px;
-  margin-top: 4px;
-  color: #8a968b;
 }
 .profile {
   display: flex;
@@ -182,10 +158,4 @@ main {
   letter-spacing: 2px;
   font-weight: 700;
   color: #456351;
-}
-.private-label {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 10px;
 }

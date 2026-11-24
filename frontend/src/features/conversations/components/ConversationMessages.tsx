@@ -31,7 +31,6 @@ export function ConversationMessages({
           <div className="message-body">
             <div className="message-label">
               {m.role === "assistant" ? "SmartDesk" : "You"}
-              {m.role === "assistant" && <span>SUPPORT ASSISTANT</span>}
             </div>
             <p>{m.content}</p>
             {m.response?.citations.length ? (

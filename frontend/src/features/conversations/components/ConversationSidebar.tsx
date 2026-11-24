@@ -1,4 +1,4 @@
-import { Headphones, MessageSquare, Plus, ShieldCheck } from "lucide-react";
+import { Headphones, MessageSquare, Plus } from "lucide-react";
 import type { NavigationProps } from "../models/navigationModels";
 export function ConversationSidebar({
   conversations,
@@ -22,7 +22,6 @@ export function ConversationSidebar({
         <Plus size={17} />
         New conversation
       </button>
-      <div className="nav-label">YOUR WORKSPACE</div>
       <div className="nav-current">
         <MessageSquare size={17} />
         Conversations<span>{conversations.length}</span>
@@ -45,17 +44,11 @@ export function ConversationSidebar({
           <p className="empty-history">Your conversations will appear here.</p>
         )}
       </div>
-      <div className="sidebar-note">
-        <ShieldCheck size={21} />
-        <p>
-          Support you can trust<span>Answers backed by company sources.</span>
-        </p>
-      </div>
       <div className="profile">
         <div className="avatar">{email ? email[0].toUpperCase() : "U"}</div>
         <div>
-          <strong>Employee workspace</strong>
-          <span>{email || "Connecting…"}</span>
+          <strong>Employee account</strong>
+          <span>{email.split("@")[0] || "Connecting…"}</span>
         </div>
       </div>
     </aside>

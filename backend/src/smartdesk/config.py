@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://smartdesk:smartdesk@localhost:5432/smartdesk"
     checkpoint_url: str = "postgresql://smartdesk:smartdesk@localhost:5432/smartdesk"
     auth_mode: Literal["demo", "oidc"] = "demo"
-    demo_email: str = "jane.doe@example.com"
+    demo_email: str = "jane.doe@novatech.example"
     session_secret: SecretStr = SecretStr("")
     oidc_issuer: str = ""
     oidc_audience: str = ""
