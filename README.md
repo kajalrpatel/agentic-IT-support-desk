@@ -95,7 +95,7 @@ See [verification results](docs/verification.md) and [retrieval metrics](evaluat
 
 The corpus includes adapted HR source material and explicitly synthetic IT guidance; it is not a real employer's policy. The original HR dataset's scope is narrower than all HR questions. Unsupported topics should escalate. See [dataset provenance and gaps](docs/datasets.md).
 
-- [Architecture and conversation memory](docs/architecture.md)
+- Architecture diagrams: [system overview](docs/architecture.md#system-overview), [shared state during a conversation](docs/architecture.md#shared-state-during-a-conversation), and [ticket approval lifecycle](docs/architecture.md#ticket-approval-lifecycle).
 - [Backend naming guide](docs/backend_naming.md)
 - [Operations, authentication, backup, and deployment](docs/operations.md)
 - [Demo walkthrough](docs/demo.md)

@@ -2,23 +2,7 @@
 
 The repository contains two independently buildable applications. The backend is a modular monolith with FastAPI transport, LangGraph orchestration, chat/ticket application services, and a self-contained `smartdesk.rag` feature. Shared adapters handle OpenAI, Jira, identity, and PostgreSQL; the Qdrant adapter belongs to RAG. The React frontend uses the versioned API; it does not access provider credentials or databases.
 
-## API and storage boundaries
-
-`main.py` creates the FastAPI application, installs middleware and registers the health, authentication and conversation routers in `api/routers/`. The conversation router owns messages, approval and streaming. Application models define the validated inputs and results shared with workflows. The API adds HTTP-specific conversation and transcript views.
-
-`ChatService` uses the conversation store interface for ownership checks, locking, request replay, history and transcript writes. Its PostgreSQL adapter records each request with its user message and each completed response with its assistant message. `TicketService` uses a separate ticket-attempt store for reservation and completion. It owns the decision to create a Jira issue or reconcile an uncertain submission. `bootstrap.py` connects both services to their adapters.
-
-## RAG module boundaries
-
-`rag/ingestion.py` owns indexing: `document_loader.py` reads reviewed Markdown, `chunking.py` produces passages, `embedding.py` creates dense/sparse vectors, and `qdrant_store.py` persists them. There is one ingestion implementation. It compares hashes, rejects incompatible index signatures, updates changed chunks, and removes stale chunks only after successful upserts. Ingestion does not load the reranker.
-
-`rag/retrieval.py` owns query embedding, candidate search, optional reranking, score filtering, and final context selection. Qdrant-specific requests and native RRF fusion stay in `qdrant_store.py`. Cross-encoder model loading and ranking stay in `reranking.py`. Both embedding and reranking adapters load lazily. Retrieval concurrency remains bounded to two calls per pipeline instance.
-
-`rag/query_pipeline.py` remains the standalone grounded-answer entry point and component bundle. The conversation graph delegates to specialised IT and HR agents, which use its retrieval, generation, and verification components as separate graph steps. RAG returns `AnswerResult` from `rag/rag_models.py` and does not import FastAPI schemas, Jira services, or conversation storage. `rag/rag_interfaces.py` declares component contracts so pipelines can run with alternative implementations or controlled test doubles. See [agents and evaluation](agents_and_evaluation.md) for agent/tool boundaries and LangSmith setup.
-
-`rag/rag_factory.py` constructs concrete embedding, store, and reranking components for application startup, the CLI, and evaluation. Its returned component bundle owns the Qdrant client and must be closed by the caller. The shared OpenAI client remains in `infrastructure/llm/` because routing and conversation summarization also use it; answer and verifier prompts belong to `rag/answer_prompts/`.
-
-Short entries stay intact. Long handbooks split at Markdown headings, with the heading path repeated for context and a 1,500-character passage budget. On the same leave handbook, paragraph-v1 produced 12 passages, two spanning multiple major sections. With section-v2, 26 content passages retain their section heading and one carries the introduction. None crosses major sections. A same-embedding paragraph-v1 index upgrades in one ingestion; section passages receive distinct IDs. An embedding change requires a new collection.
+## System overview
 
 ```mermaid
 flowchart LR
@@ -42,6 +26,73 @@ flowchart LR
   Corpus[Reviewed HR + synthetic IT] --> Ingest[Ingestion command]
   Ingest --> Qdrant
 ```
+
+## Shared state during a conversation
+
+Each conversation has its own LangGraph thread. Its ID is the `thread_id` used to resume the graph from PostgreSQL. A node returns updates to named fields in `ChatState`. The specialist subgraphs share three field names with the parent graph: `text`, `route`, and `response`. The supervisor reads the conversation history and resolves the question before handing it to one specialist.
+
+```mermaid
+sequenceDiagram
+    participant C as ChatService
+    participant P as Parent graph (ChatState)
+    participant S as Supervisor
+    participant IT as IT specialist (SpecialistState)
+    participant Q as Qdrant
+    C->>P: Invoke same thread with text, history and verified email
+    P->>S: Previous topic was VPN. Employee asks "Does it work on Mac?"
+    S-->>P: Update route with IT category and standalone VPN question
+    P->>IT: Pass text and route
+    IT->>Q: Search employee-accessible IT passages
+    Q-->>IT: Candidates for reranking
+    IT->>IT: Store passages and candidate locally, verify claims
+    IT-->>P: Update response with cited answer or escalation offer
+    P-->>C: Return response and any pending approval
+    C->>C: Save assistant message in PostgreSQL transcript
+```
+
+| State | Where it lives | What it enables |
+| --- | --- | --- |
+| Conversation identity, history, summary, route and response | Parent graph, checkpointed in PostgreSQL per conversation | The supervisor can resolve a follow-up when the browser sends the next message. |
+| Retrieved passages and candidate answer | Selected specialist's subgraph | Search, generation and verification exchange intermediate results. The parent receives the employee-facing response. |
+| Draft, draft version, approval action and approved version | Parent graph, checkpointed at the approval interrupt | An employee can refresh, edit or confirm the pending draft. |
+| Ordered messages and ticket creation attempts | PostgreSQL application tables | The UI can reload the transcript and the ticket service can reconcile a repeated submission. |
+
+See the [parent state definition](../backend/src/smartdesk/workflows/conversation_state.py), [specialist state definition](../backend/src/smartdesk/agents/specialist_graph.py), and [workflow wiring](../backend/src/smartdesk/workflows/conversation_workflow.py).
+
+## Ticket approval lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Preview: Sufficient details for a draft
+    Preview --> AwaitingApproval: Save version and interrupt
+    AwaitingApproval --> Preview: Edit and increment version
+    AwaitingApproval --> SideQuestion: Ask another question
+    SideQuestion --> AwaitingApproval: Answer and preserve pending draft
+    AwaitingApproval --> Cancelled: Cancel
+    AwaitingApproval --> Submit: Confirm current version
+    Submit --> Created: Jira returns ticket or reconciliation finds it
+    Submit --> AwaitingApproval: Submission needs retry or reconciliation
+    Created --> [*]
+    Cancelled --> [*]
+```
+
+## API and storage boundaries
+
+`main.py` creates the FastAPI application, installs middleware and registers the health, authentication and conversation routers in `api/routers/`. The conversation router owns messages, approval and streaming. Application models define the validated inputs and results shared with workflows. The API adds HTTP-specific conversation and transcript views.
+
+`ChatService` uses the conversation store interface for ownership checks, locking, request replay, history and transcript writes. Its PostgreSQL adapter records each request with its user message and each completed response with its assistant message. `TicketService` uses a separate ticket-attempt store for reservation and completion. It owns the decision to create a Jira issue or reconcile an uncertain submission. `bootstrap.py` connects both services to their adapters.
+
+## RAG module boundaries
+
+`rag/ingestion.py` owns indexing: `document_loader.py` reads reviewed Markdown, `chunking.py` produces passages, `embedding.py` creates dense/sparse vectors, and `qdrant_store.py` persists them. There is one ingestion implementation. It compares hashes, rejects incompatible index signatures, updates changed chunks, and removes stale chunks only after successful upserts. Ingestion does not load the reranker.
+
+`rag/retrieval.py` owns query embedding, candidate search, optional reranking, score filtering, and final context selection. Qdrant-specific requests and native RRF fusion stay in `qdrant_store.py`. Cross-encoder model loading and ranking stay in `reranking.py`. Both embedding and reranking adapters load lazily. Retrieval concurrency remains bounded to two calls per pipeline instance.
+
+`rag/query_pipeline.py` remains the standalone grounded-answer entry point and component bundle. The conversation graph delegates to specialised IT and HR agents, which use its retrieval, generation, and verification components as separate graph steps. RAG returns `AnswerResult` from `rag/rag_models.py` and does not import FastAPI schemas, Jira services, or conversation storage. `rag/rag_interfaces.py` declares component contracts so pipelines can run with alternative implementations or controlled test doubles. See [agents and evaluation](agents_and_evaluation.md) for agent/tool boundaries and LangSmith setup.
+
+`rag/rag_factory.py` constructs concrete embedding, store, and reranking components for application startup, the CLI, and evaluation. Its returned component bundle owns the Qdrant client and must be closed by the caller. The shared OpenAI client remains in `infrastructure/llm/` because routing and conversation summarization also use it; answer and verifier prompts belong to `rag/answer_prompts/`.
+
+Short entries stay intact. Long handbooks split at Markdown headings, with the heading path repeated for context and a 1,500-character passage budget. On the same leave handbook, paragraph-v1 produced 12 passages, two spanning multiple major sections. With section-v2, 26 content passages retain their section heading and one carries the introduction. None crosses major sections. A same-embedding paragraph-v1 index upgrades in one ingestion; section passages receive distinct IDs. An embedding change requires a new collection.
 
 ## Conversations
 
